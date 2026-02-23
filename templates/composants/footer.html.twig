@@ -1,0 +1,34 @@
+<footer class="border-t border-white/5 bg-[#0a0a0a] pt-14 pb-8">
+	<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+		<div class="col-span-1 md:col-span-1">
+			<a href="#" class="flex items-center gap-2.5 mb-4 group">
+				<span class="font-bold text-white tracking-wide">GameVault</span>
+			</a>
+			<p class="text-xs text-gray-500 leading-relaxed max-w-[220px]">
+				Votre plateforme gaming pour explorer, noter et partager vos jeux favoris.
+			</p>
+		</div>
+
+		{% set footer_links = {
+                "Plateforme": ["Jeux", "Lives"],
+                "Support": ["Contact", "FAQ"],
+                "Légal": ["Confidentialité", "Mentions légales"]
+            } %}
+
+		{% for title, links in footer_links %}
+			<div>
+				<h4 class="text-[0.65rem] font-bold uppercase tracking-[0.15em] text-gray-600 mb-4">{{ title }}</h4>
+				<ul class="space-y-2">
+					{% for link in links %}
+						<li>
+							<a href="#" class="text-xs text-gray-500 hover:text-purple-400 transition-colors">{{ link }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="max-w-7xl mx-auto px-6 pt-6 border-t border-white/5 text-center">
+		<p class="text-xs text-gray-600">© 2026 GameVault. Tous droits réservés.</p>
+	</div>
+</footer>
