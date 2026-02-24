@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RightRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: RightRepository::class)]
 #[ORM\Table(name: '`right`')]
@@ -23,7 +24,7 @@ class Right
 
      public function __construct()
     {
-        $this->roles = newArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -39,5 +40,26 @@ class Right
     public function setName(string $newName) : void 
     {
         $this->name = $newName;
+
+    }
+
+    public function getRoles() : Collection 
+    {
+        return $this->roles;
+    }
+
+    public function addRole(Role $role): self 
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): self 
+    {
+        $this->roles->removeElement($role);
+        return $this;
     }
 }

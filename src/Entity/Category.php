@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -22,7 +23,7 @@ class Category
 
     public function __construct() 
     {
-        $this->games = newArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int

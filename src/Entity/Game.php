@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 class Game
@@ -32,9 +33,9 @@ class Game
 
     public function __construct() 
     {
-        $this->commentaries = newArrayCollection();
-        $this->categories = newArrayCollection();
-        $this->notes = newArrayCollection();
+        $this->commentaries = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int

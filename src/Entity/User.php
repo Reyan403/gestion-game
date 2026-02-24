@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,9 +41,9 @@ class User
 
     public function __construct() 
     {
-        $this->roles = newArrayCollection();
-        $this->commentaries = newArrayCollection();
-        $this->notes = newArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->commentaries = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,6 +66,11 @@ class User
         return $this->password;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->mail; 
+    }
+
     public function setName(string $newName) : void 
     {
         $this->name = $newName;
@@ -75,6 +83,73 @@ class User
 
     public function setPassword(string $newPassword) : void
     {
-        $this->mail = password_hash($newPassword, PASSWORD_DEFAULT);
+        $this->password = $newPassword;
+    }
+
+    // Partie méthode des collections pour les DataFixtures
+    public function getRoles(): array
+    {
+        $roles = [];
+
+        foreach ($this->roles as $role) {
+            $roles[] = $role->getName(); // récupère le nom du rôle depuis la base de données
+        }
+
+        return array_unique($roles);
+    }
+
+    public function getCommentaries(): Collection
+    {
+        return $this->commentaries;
+    }
+
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addRole(Role $role): self 
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function addCommentary(Commentary $commentary): self 
+    {
+        if ($this->commentaries->contains($commentary)) {
+            $this->commentaries->add($commentary);
+        }
+
+        return $this;
+    }
+
+    public function addNote(Note $note): self 
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->add($note);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): self 
+    {
+        $this->roles->removeElement($role);
+        return $this;
+    }
+
+    public function removeCommentary(Commentary $commentary): self 
+    {
+        $this->commentaries->removeElement($commentary);
+        return $this;
+    }
+
+    public function removeNote(Note $note): self 
+    {
+        $this->notes->removeElement($note);
+        return $this;
     }
 }

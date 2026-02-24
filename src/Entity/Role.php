@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 class Role
@@ -25,8 +26,8 @@ class Role
 
     public function __construct()
     {
-        $this->rights = newArrayCollection();
-        $this->users = newArrayCollection();
+        $this->rights = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
