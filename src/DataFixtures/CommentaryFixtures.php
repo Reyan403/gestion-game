@@ -2,40 +2,70 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Commentary;
+use App\Entity\Game;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class CommentaryFixtures extends Fixture
+class CommentaryFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function data(): array 
+    public static function data(): array 
     {
         return [
             [
-                'description' => 'Un jeu captivant avec une histoire immersive et des personnages attachants. L’aventure est prenante du début à la fin.'
+                'description' => 'Un jeu captivant avec une histoire immersive et des personnages attachants. L’aventure est prenante du début à la fin.',
+                'reference_user' => UserFixtures::USER_4,
+                'game' => GameFixtures::ZELDA,
             ],
             [
-                'description' => 'Les graphismes sont magnifiques et l’univers est très bien détaillé, mais la difficulté peut parfois sembler déséquilibrée.'
+                'description' => 'Les graphismes sont magnifiques et l’univers est très bien détaillé, mais la difficulté peut parfois sembler déséquilibrée.',
+                'reference_user' => UserFixtures::USER_5,
+                'game' => GameFixtures::OVERWATCH,
             ],
             [
-                'description' => 'Un gameplay dynamique et intuitif qui offre une excellente prise en main, même pour les nouveaux joueurs.'
+                'description' => 'Un gameplay dynamique et intuitif qui offre une excellente prise en main, même pour les nouveaux joueurs.',
+                'reference_user' => UserFixtures::USER_4,
+                'game' => GameFixtures::GTA,
             ],
             [
-                'description' => 'La bande-son est exceptionnelle et accompagne parfaitement les moments forts du jeu.'
+                'description' => 'La bande-son est exceptionnelle et accompagne parfaitement les moments forts du jeu.',
+                'reference_user' => UserFixtures::USER_5,
+                'game' => GameFixtures::GTA,
             ],
             [
-                'description' => 'Le mode multijoueur ajoute une vraie plus-value avec des parties intenses et compétitives.'
+                'description' => 'Le mode multijoueur ajoute une vraie plus-value avec des parties intenses et compétitives.',
+                'reference_user' => UserFixtures::USER_5,
+                'game' => GameFixtures::HOLLOW_KNIGHT,
             ],
             [
-                'description' => 'Malgré quelques bugs mineurs, l’expérience globale reste très agréable et divertissante.'
+                'description' => 'Malgré quelques bugs mineurs, l’expérience globale reste très agréable et divertissante.',
+                'reference_user' => UserFixtures::USER_6,
+                'game' => GameFixtures::ZELDA,
             ],
         ];
     }
 
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
+        for ($i = 0; $i < count(self::data()); $i++) {
+            $commentary = new Commentary();
+            $commentary->setDescription(self::data()[$i]['description']);
+            $commentary->setGame($this->getReference(self::data()[$i]['game'], Game::class));
+            $commentary->setUser($this->getReference(self::data()[$i]['reference_user'], User::class));
+
+            $manager->persist($commentary);
+        }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array 
+    {
+        return [
+            GameFixtures::class,
+            UserFixtures::class,
+        ];
     }
 }

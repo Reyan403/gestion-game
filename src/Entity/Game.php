@@ -62,4 +62,62 @@ class Game
     {
         $this->description = $newDescription;
     }
+
+    // Méthodes des collection
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function getCommentaries(): Collection
+    {
+        return $this->commentaries;
+    }
+
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addCategory(Category $category): self 
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function addCommentary(Commentary $commentary): self 
+    {
+        if (!$this->commentaries->contains($commentary)) {
+            $this->commentaries->add($commentary);
+        }
+
+        return $this;
+    }
+
+    public function addNote(Note $note): self 
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category) {
+        $this->categories->removeElement($category);
+        return $this;
+    }
+
+    public function removeCommentary(Commentary $commentary) {
+        $this->commentaries->removeElement($commentary);
+        return $this;
+    }
+
+    public function removeNote(Note $note) {
+        $this->notes->removeElement($note);
+        return $this;
+    }
 }

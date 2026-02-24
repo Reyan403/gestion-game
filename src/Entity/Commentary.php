@@ -40,4 +40,24 @@ class Commentary
     {
         $this->description = $newDescription;
     }
+
+    public function getGame(): Game 
+    {
+        return $this->game;
+    }
+
+    public function getUser(): User 
+    {
+        return $this->user;
+    }
+
+    public function setGame(Game $game): void 
+    {
+        $this->game = $game;
+    }
+
+    public function setUser(User $user): void 
+    {
+        $this->user = $user;
+    }
 }

@@ -7,14 +7,16 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public const USER_1 = 'user-1';
     public const USER_2 = 'user-2';
     public const USER_3 = 'user-3';
     public const USER_4 = 'user-4';
     public const USER_5 = 'user-5';
+    public const USER_6 = 'user-6';
 
     private UserPasswordHasherInterface $hasher;
 
@@ -59,6 +61,13 @@ class UserFixtures extends Fixture
                 'mail' => 'nathan.robert@example.com',
                 'password' => 'nathan456',
                 'reference_user' => self::USER_5,
+                'reference_role' => RoleFixtures::ROLE_USER,
+            ],
+            [
+                'name' => 'Reyan Ghazzaoui',
+                'mail' => 'ghazzaoui.reyan@example.com',
+                'password' => 'reyan1234',
+                'reference_user' => self::USER_6,
                 'reference_role' => RoleFixtures::ROLE_USER,
             ],
         ];
