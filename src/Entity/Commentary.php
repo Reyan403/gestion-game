@@ -17,6 +17,9 @@ class Commentary
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private \DateTime $createdAt;
+
     // ManyToOne: si une relation OneToMany et ManyToOne émerge, alors celui qui a la clef étrangère porte ManyToOne
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commentaries')]
     #[ORM\JoinColumn(nullable: false)]
@@ -31,7 +34,7 @@ class Commentary
         return $this->id;
     }
 
-    public function getDescription(): ?int
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -59,5 +62,15 @@ class Commentary
     public function setUser(User $user): void 
     {
         $this->user = $user;
+    }
+
+    public function getDate(): \DateTime 
+    {
+        return $this->createdAt;
+    }
+
+    public function setDate(\DateTime $newDate): void 
+    {
+        $this->createdAt = $newDate;
     }
 }

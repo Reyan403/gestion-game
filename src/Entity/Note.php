@@ -21,19 +21,14 @@ class Note
     #[ORM\Column]
     private ?int $note_game = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getIdGame(): ?int
     {
-        return $this->id_game;
+        return $this->game;
     }
 
     public function getIdUser(): ?int
     {
-        return $this->id_user;
+        return $this->user;
     }
 
     public function getNoteGame(): ?int
