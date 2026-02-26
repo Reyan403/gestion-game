@@ -4,28 +4,105 @@
 {% endblock %}
 
 {% block body %}
-	<form method="post">
-		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-		{% endif %}
 
-		{% if app.user %}
-			<div class="mb-3">
-				Vous êtes connecté en tant que
-				{{ app.user.userIdentifier }},
-				<a href="{{ logout_path() }}">Déconnexion</a>
+	<div id="pop-overlay" class="{{ (error is defined and error) ? '' : 'hidden' }} fixed top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center">
+
+		<div
+			class="relative w-full max-w-md mx-4">
+
+			{# Carte #}
+			<div
+				class="relative bg-[#0f1117] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+
+				{# Barre gradient en haut #}
+				<div class="h-1 w-full bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-500"></div>
+
+				{# Glows décoratifs #}
+				<div class="absolute -top-16 -left-16 w-48 h-48 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+				<div class="absolute -bottom-16 -right-16 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+				{# Bouton fermeture #}
+				<button id="btn-close-login" type="button" class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all">
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+				</button>
+
+				<div
+					class="relative p-8">
+
+					{# En-tête #}
+					<div class="mb-8 text-center">
+						<div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-violet-600 to-blue-500 mb-4 shadow-lg shadow-violet-500/30">
+							<svg class="w-7 h-7 text-white" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+								<path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+							</svg>
+						</div>
+						<h1 class="text-2xl font-bold text-white tracking-tight">Bon retour !</h1>
+						<p class="text-sm text-white/40 mt-1">Connectez-vous à votre compte</p>
+					</div>
+
+					{# Erreur #}
+					{% if error is defined and error %}
+						<div class="mb-5 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+							<svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+							{% if error.messageKey == 'Invalid credentials.' %}
+								E-mail ou mot de passe incorrect.
+							{% elseif error.messageKey == 'Username could not be found.' %}
+								Aucun compte associé à cet e-mail.
+							{% else %}
+								{{ error.messageKey|trans(error.messageData, 'security') }}
+							{% endif %}
+						</div>
+					{% endif %}
+
+					{# Déjà connecté #}
+					{% if app.user %}
+						<div class="mb-5 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
+							Connecté en tant que
+							<strong>{{ app.user.userIdentifier }}</strong>.
+							<a href="{{ logout_path() }}" class="underline hover:text-emerald-300">Déconnexion</a>
+						</div>
+					{% endif %}
+
+					{# Formulaire #}
+					<form method="post" action="{{ path('app_login') }}" class="space-y-5">
+
+						<div>
+							<label for="username" class="block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2">Adresse e-mail</label>
+							<input type="text" value="{{ last_username is defined ? last_username : '' }}" name="_username" id="username" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 text-sm focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 transition-all" placeholder="votre@email.com" autocomplete="username" required autofocus>
+						</div>
+
+						<div>
+							<label for="password" class="block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2">Mot de passe</label>
+							<input type="password" name="_password" id="password" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 text-sm focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 transition-all" placeholder="••••••••" autocomplete="current-password" required>
+						</div>
+
+						<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+						<button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-500 hover:to-blue-400 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide">
+							Se connecter
+						</button>
+
+					</form>
+
+					{# Séparateur #}
+					<div class="relative my-6">
+						<div class="absolute inset-0 flex items-center">
+							<div class="w-full border-t border-white/10"></div>
+						</div>
+						<div class="relative flex justify-center text-xs">
+							<span class="px-3 bg-[#0f1117] text-white/30">ou</span>
+						</div>
+					</div>
+
+					{# Lien inscription #}
+					<p class="text-center text-sm text-white/40">
+						Vous n'avez pas un compte ?
+						<button id="btn-pop-reg" class="font-semibold text-violet-400 hover:text-violet-300 transition-colors hover:underline">S'inscrire</button>
+					</p>
+
+				</div>
 			</div>
-		{% endif %}
+		</div>
+	</div>
 
-		<h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
-		<label for="username">Mail</label>
-		<input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
-		<label for="password">Mot de passe</label>
-		<input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-		<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-		<button class="btn btn-lg btn-primary" type="submit">
-			Se connecter
-		</button>
-	</form>
 {% endblock %}

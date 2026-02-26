@@ -7,4 +7,32 @@ import './stimulus_bootstrap.js';
  */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+const btn = document.getElementById('btn-pop');
+const popup = document.getElementById('pop-overlay');
+const btnReg = document.getElementById('btn-pop-reg');
+const popupReg = document.getElementById('pop-overlay-reg');
+const closePopUpLogin = document.getElementById('btn-close-login');
+const closePopUpReg = document.getElementById('btn-close-reg');
+const btnOpenLogin = document.getElementById('btn-open-login');
+
+btn.addEventListener('click', () => {
+    popup.classList.remove('hidden');
+})
+
+btnReg.addEventListener('click', () => {
+    popupReg.classList.remove('hidden');
+    popup.classList.add('hidden');
+})
+
+closePopUpLogin.addEventListener('click', () => {
+    popup.classList.add('hidden');
+})
+
+closePopUpReg.addEventListener('click', () => {
+    popupReg.classList.add('hidden');
+})
+
+btnOpenLogin.addEventListener('click', () => {
+    popup.classList.remove('hidden');
+    popupReg.classList.add('hidden');
+})

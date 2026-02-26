@@ -4,17 +4,116 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Register</h1>
 
-	{{ form_errors(registrationForm) }}
+	<div id="pop-overlay-reg" class="{{ registrationForm.vars.submitted ? '' : 'hidden' }} fixed top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center">
 
-	{{ form_start(registrationForm) }}
-	{{ form_row(registrationForm.name) }}
-	{{ form_row(registrationForm.mail) }}
-	{{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
+		<div
+			class="relative w-full max-w-md mx-4">
 
-	<button type="submit" class="btn">Register</button>
-	{{ form_end(registrationForm) }}
+			{# Carte #}
+			<div
+				class="relative bg-[#0f1117] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+
+				{# Barre gradient en haut #}
+				<div class="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-600"></div>
+
+				{# Glows décoratifs #}
+				<div class="absolute -top-16 -right-16 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+				<div class="absolute -bottom-16 -left-16 w-48 h-48 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+				{# Bouton fermeture #}
+				<button id="btn-close-reg" type="button" class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all">
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+				</button>
+
+				<div
+					class="relative p-8">
+
+					{# En-tête #}
+					<div class="mb-8 text-center">
+						<div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 mb-4 shadow-lg shadow-blue-500/30">
+							<svg class="w-7 h-7 text-white" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+								<path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+							</svg>
+						</div>
+						<h1 class="text-2xl font-bold text-white tracking-tight">Créer un compte</h1>
+						<p class="text-sm text-white/40 mt-1">Rejoignez la communauté</p>
+					</div>
+
+					{# Erreurs globales #}
+					{% if form_errors(registrationForm) %}
+						<div class="mb-5 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+							{{ form_errors(registrationForm) }}
+						</div>
+					{% endif %}
+
+					{# Formulaire #}
+					{{ form_start(registrationForm, {'attr': {'class': 'space-y-5'}}) }}
+
+					<div>
+						<label class="block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2">Nom complet</label>
+						{{ form_widget(registrationForm.name, {
+								'attr': {
+									'class': 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all',
+									'placeholder': 'Jean Dupont'
+								}
+							}) }}
+						{% for error in registrationForm.name.vars.errors %}
+							<p class="mt-1 text-xs text-red-400">{{ error.message }}</p>
+						{% endfor %}
+					</div>
+
+					<div>
+						<label class="block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2">Adresse e-mail</label>
+						{{ form_widget(registrationForm.mail, {
+								'attr': {
+									'class': 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all',
+									'placeholder': 'votre@email.com'
+								}
+							}) }}
+						{% for error in registrationForm.mail.vars.errors %}
+							<p class="mt-1 text-xs text-red-400">{{ error.message }}</p>
+						{% endfor %}
+					</div>
+
+					<div>
+						<label class="block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2">Mot de passe</label>
+						{{ form_widget(registrationForm.plainPassword, {
+								'label': false,
+								'attr': {
+									'class': 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all',
+									'placeholder': '••••••••'
+								}
+							}) }}
+						{% for error in registrationForm.plainPassword.vars.errors %}
+							<p class="mt-1 text-xs text-red-400">{{ error.message }}</p>
+						{% endfor %}
+					</div>
+
+					<button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-violet-600 hover:from-blue-400 hover:to-violet-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide">
+						Créer mon compte
+					</button>
+
+					{{ form_end(registrationForm) }}
+
+					{# Séparateur #}
+					<div class="relative my-6">
+						<div class="absolute inset-0 flex items-center">
+							<div class="w-full border-t border-white/10"></div>
+						</div>
+						<div class="relative flex justify-center text-xs">
+							<span class="px-3 bg-[#0f1117] text-white/30">ou</span>
+						</div>
+					</div>
+
+					{# Lien connexion #}
+					<p class="text-center text-sm text-white/40">
+						Vous avez déjà un compte ?
+						<button id="btn-open-login" class="font-semibold text-blue-400 hover:text-blue-300 transition-colors hover:underline">Se connecter</button>
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
