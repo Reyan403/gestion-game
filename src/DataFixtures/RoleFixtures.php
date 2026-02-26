@@ -9,27 +9,31 @@ use Doctrine\Persistence\ObjectManager;
 class RoleFixtures extends Fixture
 {
     public const ROLE_MODERATEUR = 'role-moderateur';
-    public const ROLE_ADMIN = 'role-admin';
-    public const ROLE_REDACTEUR = 'role-redacteur';
-    public const ROLE_USER = 'role-user';
+    public const ROLE_ADMIN      = 'role-admin';
+    public const ROLE_REDACTEUR  = 'role-redacteur';
+    public const ROLE_USER       = 'role-user';
 
     public static function data(): array 
     {
         return [
             [
-                'name' => 'Modérateur',
+                'name'           => 'Modérateur',
+                'symfonyRole'    => 'ROLE_MODERATOR',
                 'reference_role' => self::ROLE_MODERATEUR,
             ],
             [
-                'name' => 'Administrateur',
+                'name'           => 'Administrateur',
+                'symfonyRole'    => 'ROLE_ADMIN',
                 'reference_role' => self::ROLE_ADMIN,
             ],
             [
-                'name' => 'Rédacteur',
+                'name'           => 'Rédacteur',
+                'symfonyRole'    => 'ROLE_EDITOR',
                 'reference_role' => self::ROLE_REDACTEUR,
             ],
             [
-                'name' => 'Utilisateur',
+                'name'           => 'Utilisateur',
+                'symfonyRole'    => 'ROLE_USER',
                 'reference_role' => self::ROLE_USER,
             ],
         ];
@@ -40,6 +44,7 @@ class RoleFixtures extends Fixture
         for ($i = 0; $i < count(self::data()); $i++) {
             $role = new Role();
             $role->setName(self::data()[$i]['name']);
+            $role->setSymfonyRole(self::data()[$i]['symfonyRole']);
 
             $this->addReference(self::data()[$i]['reference_role'], $role);
 

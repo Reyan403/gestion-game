@@ -15,8 +15,13 @@ class Role
     #[ORM\Column]
     private ?int $id = null;
 
+    /** Nom affiché dans l'UI (ex: "Modérateur", "Rédacteur") */
     #[ORM\Column(length: 255, unique: true)]
     private string $name;
+
+    /** Code Symfony Security (ex: "ROLE_MODERATOR", "ROLE_EDITOR") */
+    #[ORM\Column(length: 255, unique: true)]
+    private string $symfonyRole;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles')]
     private Collection $users;
@@ -44,4 +49,15 @@ class Role
     {
         $this->name = $newName;
     }
+
+    public function getSymfonyRole(): string
+    {
+        return $this->symfonyRole;
+    }
+
+    public function setSymfonyRole(string $symfonyRole): void
+    {
+        $this->symfonyRole = $symfonyRole;
+    }
 }
+

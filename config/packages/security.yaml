@@ -36,8 +36,13 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/comment/moderation, roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        - { path: ^/game/validation, roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        - { path: ^/user-management, roles: ROLE_ADMIN }
+        - { path: ^/right-management, roles: ROLE_ADMIN }
+        - { path: ^/game-management, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+
+        # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:

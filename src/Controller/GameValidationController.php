@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class AdminController extends AbstractController
+final class GameValidationController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('/game/validation', name: 'app_game_validation')]
     public function index(): Response
     {
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('game_validation/index.html.twig', [
+            'controller_name' => 'GameValidationController',
         ]);
     }
 }

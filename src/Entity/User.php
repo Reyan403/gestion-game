@@ -88,16 +88,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $newPassword;
     }
 
-    // Partie méthode des collections pour les DataFixtures
+    /**
+         * Retourne les rôles de l'utilisateur sous forme de chaînes de caractères.
+         *
+         * Cette méthode est utilisée par Symfony Security pour gérer
+         * l'autorisation et vérifier les permissions (is_granted, ROLE_ADMIN, etc.).
+         * Elle doit obligatoirement retourner un array de strings, même si
+         * tu utilises une entité Role pour stocker les rôles en base.
+     *
+     * Exemple de sortie : ['ROLE_USER', 'ROLE_ADMIN']
+     */
     public function getRoles(): array
     {
         $roles = [];
 
         foreach ($this->roles as $role) {
-            $roles[] = $role->getName(); // récupère le nom du rôle depuis la base de données
+            $roles[] = $role->getSymfonyRole(); // ex: "ROLE_ADMIN", "ROLE_MODERATOR"
         }
 
         return array_unique($roles);
+    }
+
+    /**
+         * Retourne les rôles de l'utilisateur sous forme de Collection d'objets Role.
+         *
+         * Cette méthode est utilisée pour manipuler la collection d'entités
+         * dans le formulaire (EntityType) ou pour toute logique côté Doctrine.
+         * Elle ne sert pas directement à Symfony Security, qui ne lit que getRoles().
+         *
+         * Exemple de sortie : Collection d'objets Role
+    */
+    public function getRolesEntities(): Collection 
+    {
+        return $this->roles;
     }
 
     public function getCommentaries(): Collection
