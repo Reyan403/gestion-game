@@ -54,15 +54,6 @@
 						</div>
 					{% endif %}
 
-					{# Déjà connecté #}
-					{% if app.user %}
-						<div class="mb-5 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
-							Connecté en tant que
-							<strong>{{ app.user.userIdentifier }}</strong>.
-							<a href="{{ logout_path() }}" class="underline hover:text-emerald-300">Déconnexion</a>
-						</div>
-					{% endif %}
-
 					{# Formulaire #}
 					<form method="post" action="{{ path('app_login') }}" class="space-y-5">
 

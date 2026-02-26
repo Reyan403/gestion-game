@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->mail; 
+        return (string) $this->name; 
     }
 
     public function setName(string $newName) : void 

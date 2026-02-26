@@ -17,19 +17,19 @@ class RoleFixtures extends Fixture
     {
         return [
             [
-                'name' => 'ROLE_MODERATEUR',
+                'name' => 'Modérateur',
                 'reference_role' => self::ROLE_MODERATEUR,
             ],
             [
-                'name' => 'ROLE_ADMIN',
+                'name' => 'Administrateur',
                 'reference_role' => self::ROLE_ADMIN,
             ],
             [
-                'name' => 'ROLE_REDACTEUR',
+                'name' => 'Rédacteur',
                 'reference_role' => self::ROLE_REDACTEUR,
             ],
             [
-                'name' => 'ROLE_USER',
+                'name' => 'Utilisateur',
                 'reference_role' => self::ROLE_USER,
             ],
         ];

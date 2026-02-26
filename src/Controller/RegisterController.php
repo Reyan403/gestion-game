@@ -16,12 +16,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
-    public function register(
-        Request $request,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-        AuthenticationUtils $authenticationUtils,
-    ): Response {
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils,): Response 
+    {
         // Si l'utilisateur est déjà connecté, on le redirige vers l'accueil
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
@@ -49,7 +45,7 @@ final class RegisterController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
-        
+
         return $this->render('home/index.html.twig', [
             'registrationForm' => $form,
             'show_register'    => true,
