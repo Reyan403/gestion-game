@@ -21,10 +21,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private string $name;
+    private ?string $name = null;
 
     #[ORM\Column(unique: true, length: 255)]
-    private string $mail;
+    private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
     private string $password;
@@ -53,12 +53,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getName() : string 
+    public function getName() : ?string 
     {
         return $this->name;
     }
 
-    public function getMail() : string 
+    public function getMail() : ?string 
     {
         return $this->mail;
     }
@@ -70,15 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->name; 
+        return (string) $this->id; 
     }
 
-    public function setName(string $newName) : void 
+    public function setName(?string $newName) : void 
     {
         $this->name = $newName;
     }
 
-    public function setMail(string $newMail) : void
+    public function setMail(?string $newMail) : void
     {
         $this->mail = $newMail;
     }

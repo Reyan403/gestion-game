@@ -1,7 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfilController!{% endblock %}
+{% block title %}Profil
+{% endblock %}
 
 {% block body %}
-    {{ include('composants/sidebar.html.twig') }}
+	{{ include('composants/sidebar.html.twig') }}
+
+	{{form_start(form)}}
+
+        {{form_label(form.name)}}
+        {{form_widget(form.name)}}
+        {{form_errors(form.name)}}
+
+        {{form_label(form.mail)}}
+        {{form_widget(form.mail)}}
+        {{form_errors(form.mail)}}
+
+        {{form_label(form.plainPassword)}}
+        {{form_widget(form.plainPassword)}}
+        {{form_errors(form.plainPassword)}}
+
+        {{form_label(form.newPassword)}}
+        {{form_widget(form.newPassword)}}
+        {{form_errors(form.newPassword)}}
+
+        {{form_label(form.confirmPassword)}}
+        {{form_widget(form.confirmPassword)}}
+        {{form_errors(form.confirmPassword)}}
+
+	{{form_end(form)}}
+
 {% endblock %}

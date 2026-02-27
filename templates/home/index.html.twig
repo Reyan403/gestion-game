@@ -15,7 +15,8 @@
 
 		{{ include('composants/header.html.twig') }}
 
-		{{ include('login/login.html.twig') }}
+		{# render controller car le login popup est géré par le controller #}
+		{{ render(controller('App\\Controller\\LoginController::loginPopup')) }}
 
 		{{ include('registration/register.html.twig') }}
 

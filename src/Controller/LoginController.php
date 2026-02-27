@@ -10,17 +10,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class LoginController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(): Response
     {
-        // Si l'utilisateur est déjà connecté, on le redirige vers l'accueil
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
-        }
-
-        $error        = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
+        // Le popup de login est dans l'accueil — on redirige toujours vers app_home
+        // En cas d'échec, Symfony stocke l'erreur en session (failure_path: app_home dans security.yaml)
         return $this->redirectToRoute('app_home');
+    }
+    
+    // Appelée via {{ render(controller('App\\Controller\\LoginController::loginPopup')) }}
+    // Cette fonction permet d'afficher les erreurs et le dernier nom utiliser par l'utilisateur
+    // On ne le met dans la fonction login() car sinon pour chaque erreur du formulaire, ça nous renvois dans sur la page d'accueil au lieu de nous laisser sur le popup
+    public function loginPopup(AuthenticationUtils $authenticationUtils): Response
+    {
+        return $this->render('login/login.html.twig', [
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error'         => $authenticationUtils->getLastAuthenticationError(),
+        ]);
     }
 
     #[Route('/logout', name: 'app_logout')]

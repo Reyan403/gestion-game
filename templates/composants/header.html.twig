@@ -10,7 +10,7 @@
 			{% if app.user %}
 				<div class="flex items-center gap-5">
 					<a href="{{ path('app_home') }}" class="text-sm text-white/40 hidden sm:block">
-						<strong class="text-white/80">{{ app.user.userIdentifier }}</strong>
+						<strong class="text-white/80">{{ app.user.getName() }}</strong>
 					</a>
 
 					<div class="flex items-center gap-5">
@@ -22,15 +22,6 @@
 									<circle cx="12" cy="12" r="3"></circle>
 								</svg>
 							</a>
-							{# Tooltip Profil #}
-							<div class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2
-										opacity-0 group-hover/profile:opacity-100
-										translate-y-1 group-hover/profile:translate-y-0
-										transition-all duration-200 whitespace-nowrap z-50
-										bg-[#1c1c1c] border border-white/10 text-white/90 text-[11px] font-medium px-2.5 py-1.5 rounded-lg shadow-2xl">
-								Profil
-								<div class="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#1c1c1c] border-l border-t border-white/10 rotate-45"></div>
-							</div>
 						</div>
 
 						{# Icône Déconnexion avec tooltip #}
@@ -42,15 +33,6 @@
 									<line x1="21" y1="12" x2="9" y2="12"></line>
 								</svg>
 							</a>
-							{# Tooltip Déconnexion #}
-							<div class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2
-										opacity-0 group-hover/logout:opacity-100
-										translate-y-1 group-hover/logout:translate-y-0
-										transition-all duration-200 whitespace-nowrap z-50
-										bg-[#1c1c1c] border border-white/10 text-white/90 text-[11px] font-medium px-2.5 py-1.5 rounded-lg shadow-2xl">
-								Déconnexion
-								<div class="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#1c1c1c] border-l border-t border-white/10 rotate-45"></div>
-							</div>
 						</div>
 					</div>
 				</div>

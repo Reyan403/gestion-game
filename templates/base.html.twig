@@ -16,6 +16,8 @@
 		{% endblock %}
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+	{% include 'layout/flashes.html.twig' %}
+		{% block body %}
+		{% endblock %}
 	</body>
 </html>
