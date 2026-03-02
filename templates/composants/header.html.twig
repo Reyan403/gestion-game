@@ -1,5 +1,5 @@
 {# ═══════════════════ HEADER ═══════════════════ #}
-<header class="fixed top-0 inset-x-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5">
+<header class="fixed top-0 inset-x-0 z-50 bg-[#0f1422] backdrop-blur-md border-b border-white/5">
 	<div class="max-w-7xl mx-auto px-6 h-[60px] flex items-center justify-between">
 		<a href="{{ path('app_home') }}" class="flex items-center gap-2.5 group">
 			<span class="font-bold text-[1.05rem] text-white tracking-wide">GameHub</span>
@@ -13,7 +13,8 @@
 						<strong class="text-white/80">{{ app.user.getName() }}</strong>
 					</a>
 
-					<div class="flex items-center gap-5">
+					<div
+						class="flex items-center gap-5">
 						{# Icône Profil/Paramètres avec tooltip #}
 						<div class="relative group/profile flex items-center">
 							<a href="{{ path('profil_edit', { id: app.user.id }) }}" class="p-2 rounded-lg hover:bg-white/5 transition-colors">

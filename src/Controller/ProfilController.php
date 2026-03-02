@@ -46,17 +46,17 @@ final class ProfilController extends AbstractController
                 if ($plainPassword || $newPassword || $confirmPassword) {
 
                     if (!$plainPassword || !$newPassword || !$confirmPassword) {
-                        $this->addFlash('error', 'Veuillez remplir tous les champs nécessaires pour un changement de mot de passe.');
+                        $this->addFlash('erreur', 'Veuillez remplir tous les champs nécessaires pour un changement de mot de passe.');
                         $hasErrors = true;
 
                     // Si le mot de passe actuel est incorrect
                     } elseif (!$hasher->isPasswordValid($user, $plainPassword)) {
-                        $this->addFlash('error', 'Mot de passe actuel incorrect.');
+                        $this->addFlash('erreur', 'Mot de passe actuel incorrect.');
                         $hasErrors = true;
 
                     // Si la confirmation du nouveau mot de passe ne correspond pas
                     } elseif ($newPassword !== $confirmPassword) {
-                        $this->addFlash('error', 'La confirmation du mot de passe ne correspond pas au nouveau mot de passe.');
+                        $this->addFlash('erreur', 'La confirmation du mot de passe ne correspond pas au nouveau mot de passe.');
                         $hasErrors = true;
 
                     // Tout est correct : on met à jour le mot de passe
@@ -71,9 +71,9 @@ final class ProfilController extends AbstractController
                 if (!$hasErrors) {
                     try {
                         $entityManager->flush();
-                        $this->addFlash('success', 'Profil mis à jour avec succès.');
+                        $this->addFlash('succès', 'Profil mis à jour avec succès.');
                     } catch (\Exception $exception) {
-                        $this->addFlash('error', 'Un problème est survenu. Veuillez réessayer.');
+                        $this->addFlash('erreur', 'Un problème est survenu. Veuillez réessayer.');
                     }
                 }
 
@@ -82,7 +82,7 @@ final class ProfilController extends AbstractController
                 ]);
 
             } else {
-                $this->addFlash('error', 'Le formulaire est invalide.');
+                $this->addFlash('erreur', 'Le formulaire est invalide.');
             }
         }
 
