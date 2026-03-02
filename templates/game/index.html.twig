@@ -1,20 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello JeuxController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<main class="pt-15">
+		<a href="{{ path('app_home') }}">Retour à l'accueil</a>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		<img src="{{ asset(game.image) }}" alt="{{ game.title }}">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/ghazz/htdocs/php/gestion-game/src/Controller/JeuxController.php</code></li>
-        <li>Your template at <code>C:/xampp/ghazz/htdocs/php/gestion-game/templates/jeux/index.html.twig</code></li>
-    </ul>
-</div>
+		<h1>{{ game.title }}</h1>
+
+		{% for category in game.categories %}
+			<p>{{ category.name }}</p>
+		{% endfor %}
+
+		<p>{{ game.description }}</p>
+
+		<h2>Avis des joueurs</h2>
+		{% if average %}
+			{# number format prend en compte trois paramètres #}
+			{# le premier est le nombre de chiffre après la virgule #}
+			{# le second est le séparateur décimal #}
+			{# le troisième est le séparateur des milliers #}
+				<p>
+			{{ average|number_format('1', '.', '') }}
+			</p>
+
+		{% else %}
+			<p>Aucune note</p>
+		{% endif %}
+
+	</main>
 {% endblock %}

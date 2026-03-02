@@ -36,3 +36,5 @@ btnOpenLogin.addEventListener('click', () => {
     popup.classList.remove('hidden');
     popupReg.classList.add('hidden');
 })
+
+

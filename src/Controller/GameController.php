@@ -2,17 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
+use App\Repository\NoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class GameController extends AbstractController
 {
-    #[Route('/jeux', name: 'app_jeux')]
-    public function index(): Response
+    #[Route('/game/{id}', name: 'app_game')]
+    public function index(Game $game, NoteRepository $noteRepository): Response
     {
-        return $this->render('jeux/index.html.twig', [
-            'controller_name' => 'GameController',
+        $note = $noteRepository->averageNoteForGame($game);
+
+        return $this->render('game/index.html.twig', [
+            'game' => $game,
+            'average' => $note,
         ]);
     }
 }

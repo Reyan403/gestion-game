@@ -7,17 +7,17 @@
     } %}
 	{% for message in messages %}
 		<div style="
-																						background-color: {{ colors[label]['bg'] ?? '#e2e3e5' }};
-																						color: {{ colors[label]['text'] ?? '#383d41' }};
-																						border: 1px solid {{ colors[label]['border'] ?? '#d6d8db' }};
-																						padding: 15px;
-																						margin: 20px auto;
-																						max-width: 80%;
-																						border-radius: 4px;
-																						font-family: sans-serif;
-																						box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-																						text-align: center;
-																						">
+				background-color: {{ colors[label]['bg'] ?? '#e2e3e5' }};
+				color: {{ colors[label]['text'] ?? '#383d41' }};
+				border: 1px solid {{ colors[label]['border'] ?? '#d6d8db' }};
+				padding: 15px;
+				margin: 20px auto;
+				max-width: 80%;
+				border-radius: 4px;
+				font-family: sans-serif;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				text-align: center;
+				">
 			<strong>{{ label|capitalize }}
 				:</strong>
 			{{ message }}

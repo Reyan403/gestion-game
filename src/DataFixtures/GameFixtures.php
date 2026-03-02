@@ -26,7 +26,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'The Legend of Zelda: Breath of the Wild',
                 'description' => 'Explorez le vaste royaume d’Hyrule en résolvant des énigmes, combattant des ennemis et découvrant des secrets cachés dans ce jeu d’aventure épique.',
-                'image' => 'public/img/zelda.jpg',
+                'image' => 'img/zelda.jpg',
                 'game' => self::ZELDA,
                 'genres' => [
                     CategoryFixtures::ACTION, 
@@ -36,7 +36,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Minecraft',
                 'description' => 'Créez, explorez et survivez dans un monde ouvert composé de blocs, où l’imagination est la seule limite.',
-                'image' => 'public/img/minecraft.jpg',
+                'image' => 'img/minecraft.jpg',
                 'game' => self::MINECRAFT,
                 'genres' => [
                     CategoryFixtures::AVENTURE, 
@@ -45,7 +45,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'The Witcher 3: Wild Hunt',
                 'description' => 'Incarnez Geralt de Riv, chasseur de monstres, dans un RPG riche en quêtes, choix moraux et combats intenses dans un univers médiéval fantastique.',
-                'image' => 'public/img/the-witcher.webp',
+                'image' => 'img/the-witcher.webp',
                 'game' => self::THE_WITCHER,
                 'genres' => [
                     CategoryFixtures::RPG, 
@@ -56,7 +56,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Fortnite',
                 'description' => 'Participez à des batailles multijoueur intenses jusqu’au dernier survivant, construisez des structures et défiez vos amis dans des combats dynamiques.',
-                'image' => 'public/img/fortnite.jpg',
+                'image' => 'img/fortnite.jpg',
                 'game' => self::FORTNITE,
                 'genres' => [
                     CategoryFixtures::ACTION, 
@@ -66,7 +66,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Cyberpunk 2077',
                 'description' => 'Plongez dans Night City, une métropole futuriste, et personnalisez votre personnage pour accomplir des missions dans un monde ouvert cyberpunk.',
-                'image' => 'public/img/Cyberpunk2077.webp',
+                'image' => 'img/Cyberpunk2077.webp',
                 'game' => self::CYBERPUNK,
                 'genres' => [
                     CategoryFixtures::ACTION, 
@@ -77,7 +77,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Resident Evil Village',
                 'description' => 'Plongez dans une horreur intense avec Ethan Winters qui doit survivre dans un village rempli de monstres et découvrir les secrets terrifiants de la famille Dimitrescu.',
-                'image' => 'public/img/resident-evil.jpg',
+                'image' => 'img/resident-evil.jpg',
                 'game' => self::RESIDENT_EVIL,
                 'genres' => [
                     CategoryFixtures::HORREUR, 
@@ -86,7 +86,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Grand Theft Auto V (GTA V)',
                 'description' => 'Vivez une aventure criminelle à Los Santos, avec missions scénarisées, exploration libre et une multitude d’activités dans un monde ouvert vivant.',
-                'image' => 'public/img/GTA.avif',
+                'image' => 'img/GTA.avif',
                 'game' => self::GTA,
                 'genres' => [
                     CategoryFixtures::ACTION, 
@@ -96,7 +96,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Overwatch',
                 'description' => 'Choisissez un héros aux compétences uniques et affrontez des équipes adverses dans des matchs rapides et tactiques.',
-                'image' => 'public/img/overwatch.jpg',
+                'image' => 'img/overwatch.jpg',
                 'game' => self::OVERWATCH ,
                 'genres' => [
                     CategoryFixtures::ACTION, 
@@ -106,7 +106,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Hollow Knight',
                 'description' => 'Explorez les sombres et mystérieux royaumes de Hallownest, combattez des ennemis redoutables et découvrez l’histoire cachée de ce monde en 2D.',
-                'image' => 'public/img/hollow-knight.jpg',
+                'image' => 'img/hollow-knight.jpg',
                 'game' => self::HOLLOW_KNIGHT,
                 'genres' => [
                     CategoryFixtures::AVENTURE, 
