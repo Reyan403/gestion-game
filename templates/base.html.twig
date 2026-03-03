@@ -17,6 +17,11 @@
 	</head>
 	<body>
 		{% include 'composants/header.html.twig' %}
+
 		{% block body %}{% endblock %}
+
+		{{ render(controller('App\\Controller\\LoginController::loginPopup')) }}
+
+		{{ render(controller('App\\Controller\\RegisterController::registerPopup')) }}
 	</body>
 </html>

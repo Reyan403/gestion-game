@@ -50,8 +50,10 @@ class Right
 
     public function addRole(Role $role): self 
     {
-        if ($this->roles->contains($role)) {
+        if (!$this->roles->contains($role)) {
             $this->roles->add($role);
+
+            $role->addRight($this);
         }
 
         return $this;

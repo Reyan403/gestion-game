@@ -15,87 +15,86 @@ class RightFixtures extends Fixture implements DependentFixtureInterface
         return [
             [
                 'name' => 'Création de fiche de jeu',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Modification d\'une fiche de jeu',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_MODERATEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Suppression d\'une fiche de jeu',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Validation d\'une fiche de jeu',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Créer un commentaire',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
-                    RoleFixtures::ROLE_REDACTEUR
                 ],
             ],
             [
                 'name' => 'Validation d\'un commentaire',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Suppression d\'un commentaire',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_REDACTEUR,
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Suppression d\'un utilisateur',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Création d\'un rôle',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Modification d\'un rôle',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Suppression d\'un rôle',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Attribuer un rôle',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
             [
                 'name' => 'Voir les rôles',
-                'roles' => [
+                'reference_role' => [
                     RoleFixtures::ROLE_ADMIN,
                 ],
             ],
@@ -108,9 +107,9 @@ class RightFixtures extends Fixture implements DependentFixtureInterface
             $right = new Right();
             $right->setName(self::data()[$i]['name']);
 
-            if (isset(self::data()[$i]['roles'])) {
-                for ($j = 0; $j < count(self::data()[$i]['roles']); $j++) {
-                    $right->addRole($this->getReference(self::data()[$i]['roles'][$j], Role::class));
+            if (isset(self::data()[$i]['reference_role'])) {
+                for ($j = 0; $j < count(self::data()[$i]['reference_role']); $j++) {
+                    $right->addRole($this->getReference(self::data()[$i]['reference_role'][$j], Role::class));
                 }
             }
 

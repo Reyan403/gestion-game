@@ -53,4 +53,14 @@ final class RegisterController extends AbstractController
             'last_username'    => $authenticationUtils->getLastUsername(),
         ]);
     }
+
+    public function registerPopup(): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
 }

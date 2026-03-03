@@ -20,13 +20,72 @@
 			{# le premier est le nombre de chiffre après la virgule #}
 			{# le second est le séparateur décimal #}
 			{# le troisième est le séparateur des milliers #}
-				<p>
-			{{ average|number_format('1', '.', '') }}
+			<p>
+				{{ average|number_format('1', '.', '') }}
 			</p>
 
 		{% else %}
 			<p>Aucune note</p>
 		{% endif %}
 
+		<div class="container flex flex-col">
+			<div id="rating-stars" data-movie-id="{{ game.id }}" data-url="{{ path('app_game', {'id': game.id}) }}" data-is-logged-in="{{ app.user ? 'true' : 'false' }}" data-user-rating="{{ userRating|default('') }}" 
+			class="flex flex-row-reverse justify-end w-[165px] group cursor-pointer select-none [&.rated]:pointer-events-none [&.rated]:cursor-default">
+				
+				<span data-value="5"
+					class="star peer text-3xl text-gray-300 transition-colors duration-200 
+							hover:text-yellow-400 peer-hover:text-yellow-400 [&.filled]:text-yellow-400">
+					☆
+				</span>
+
+				<span data-value="4"
+					class="star peer text-3xl text-gray-300 transition-colors duration-200 
+							hover:text-yellow-400 peer-hover:text-yellow-400 [&.filled]:text-yellow-400">
+					☆
+				</span>
+
+				<span data-value="3"
+					class="star peer text-3xl text-gray-300 transition-colors duration-200 
+							hover:text-yellow-400 peer-hover:text-yellow-400 [&.filled]:text-yellow-400">
+					☆
+				</span>
+
+				<span data-value="2"
+					class="star peer text-3xl text-gray-300 transition-colors duration-200 
+							hover:text-yellow-400 peer-hover:text-yellow-400 [&.filled]:text-yellow-400">
+					☆
+				</span>
+
+				<span data-value="1"
+					class=" star peer text-3xl text-gray-300 transition-colors duration-200 
+							hover:text-yellow-400 peer-hover:text-yellow-400 [&.filled]:text-yellow-400">
+					☆
+				</span>
+			</div>
+		</div>
+
+		<div>
+			<h1>Commentaires</h1>
+			
+			{{ form_start(form) }}
+
+				{{ form_widget(form.description)}}
+				{{ form_errors(form.description) }}
+
+				{{ form_row(form.submit) }}
+
+			{{ form_end(form) }}
+
+		 	{% for c in commentaryList %}
+
+				<h2>{{ c.getUser().getName() }}</h2>
+				<p>{{ c.getDescription() }}</p>
+				<span>{{ c.getDate()|date('d/m/Y à H:i') }}</span>
+
+			{% endfor %}
+			
+		</div>
+
 	</main>
+	
 {% endblock %}
