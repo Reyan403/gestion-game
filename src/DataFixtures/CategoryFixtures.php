@@ -23,34 +23,42 @@ class CategoryFixtures extends Fixture
             [
                 'name' => 'RPG',
                 'genre' => self::RPG,
+                'twitch_game_id' => '38202,21027,206793,71375'
             ],
             [
                 'name' => 'FPS',
                 'genre' => self::FPS,
+                'twitch_game_id' => '516575,32399,515025'
             ],
             [
                 'name' => 'Course',
                 'genre' => self::COURSE,
+                'twitch_game_id' => '504461,33214,313554'
             ],
             [
                 'name' => 'Horreur',
                 'genre' => self::HORREUR,
+                'twitch_game_id' => '512710,115243,18834'
             ],
             [
                 'name' => 'Aventure',
                 'genre' => self::AVENTURE,
+                'twitch_game_id' => '493057,497078,518204'
             ],
             [
                 'name' => 'Action',
                 'genre' => self::ACTION,
+                'twitch_game_id' => '21779,509658,162502'
             ],
             [
                 'name' => 'Battle Royale',
                 'genre' => self::BATTLE_ROYALE,
+                'twitch_game_id' => '33214,511224,491487'
             ],
             [
                 'name' => 'Open World',
                 'genre' => self::OPEN_WORLD,
+                'twitch_game_id' => '32982,27471,167805'
             ],
         ];
     }
@@ -60,6 +68,7 @@ class CategoryFixtures extends Fixture
         for($i = 0; $i < count(self::data()); $i++) {
             $category = new Category();
             $category->setName(self::data()[$i]['name']);
+            $category->setTwitchGameId(self::data()[$i]['twitch_game_id']);
 
             $this->addReference(self::data()[$i]['genre'], $category);
 

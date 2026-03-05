@@ -51,75 +51,111 @@ if (btnOpenLogin && popup && popupReg) {
 
 
 // SYSTEME D'ETOILES
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const ratingContainers = document.querySelectorAll('#rating-stars');
 
-    function updateStars(container, rating) {
+    // emptyColor = couleur des étoiles vides
+    // fillColor = couleur des étoiles pleines
+    // baseColor = couleur par défaut des étoiles
+    // container = conteneur des étoiles
+    function updateStars(container, rating, fillColor, emptyColor) {
         const stars = container.querySelectorAll('.star');
+        const baseColor = container.dataset.starColor || 'text-gray-500';
+        const color = fillColor || 'text-yellow-400';
+        const colorEmpty = emptyColor || baseColor;
         const ratingRounded = Math.round(rating);
 
         stars.forEach((star) => {
             const starValue = parseInt(star.dataset.value);
+            star.classList.remove(
+                'text-orange-400', 'text-yellow-400', 'text-blue-400', 'text-gray-500'
+            );
             if (starValue <= ratingRounded) {
-                star.classList.add('filled');
-                star.innerHTML = '★'; 
+                star.classList.add(color);
+                star.innerHTML = '★';
             } else {
-                star.classList.remove('filled');
-                star.innerHTML = '☆'; 
+                star.classList.add(colorEmpty);
+                star.innerHTML = '☆';
             }
         });
+    }
+
+    function restoreAverage(container) {
+        const avg = parseFloat(container.dataset.average) || 0;
+        const baseColor = container.dataset.starColor || 'text-gray-500';
+        // Les étoiles pleines sont toujours jaunes (moyenne mondiale), les vides gardent la couleur de base
+        updateStars(container, avg, 'text-yellow-400', baseColor);
     }
 
     ratingContainers.forEach(container => {
         const url = container.dataset.url;
         const stars = container.querySelectorAll('.star');
-        
-        // On regarde si Symfony nous a envoyé une note pour cet utilisateur
-        const userRating = parseInt(container.dataset.userRating);
+        const label = document.getElementById('rating-label');
+        const isLoggedIn = container.dataset.isLoggedIn === 'true';
 
-        if (!isNaN(userRating)) {
-            // L'utilisateur a déjà voté (info venant de la BDD)
-            updateStars(container, userRating);
-            container.classList.add('rated');
-        } 
-        else {
-            // L'utilisateur n'a pas encore voté
-            stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    
-                    const isLoggedIn = container.dataset.isLoggedIn === 'true';
+        // Note initiale : celle de l'utilisateur s'il a déjà voté, sinon la moyenne
+        const userRatingRaw = container.dataset.userRating;
+        const userRating = parseInt(userRatingRaw);
+        const hasRated = !isNaN(userRating) && userRatingRaw !== '';
 
-                    if (!isLoggedIn) {
-                        const loginPopup = document.getElementById('pop-overlay');
-                        if (loginPopup) {
-                            loginPopup.classList.remove('hidden');
-                        }
-                        return; 
-                    }
+        // On garde en mémoire la note "active" pour restaurer l'affichage après un survol
+        let currentRating = hasRated ? userRating : (parseFloat(container.dataset.average) || 0);
 
-                    const selectedRating = parseInt(this.dataset.value);
+        // Si l'utilisateur n'est pas connecté -> étoiles non interactives
+        if (!isLoggedIn) {
+            container.style.cursor = 'default';
+            container.style.pointerEvents = 'none';
+            return;
+        }
 
-                    // Mise à jour visuelle instantanée
-                    updateStars(container, selectedRating);
-                    container.classList.add('rated');
+        // Utilisateur connecté -> toujours interactif (première note OU modification)
+        stars.forEach(star => {
 
-                    // On envoie à Symfony 
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({
-                            rating: selectedRating
-                        })
-                    })
+            // SURVOL : étoiles bleues
+            star.addEventListener('mouseenter', function () {
+                const hoverValue = parseInt(this.dataset.value);
+                const baseColor = container.dataset.starColor || 'text-yellow-400';
+                updateStars(container, hoverValue, 'text-blue-400', baseColor);
+                if (label) label.textContent = hoverValue + '/5';
+            });
+
+            // FIN DE SURVOL : retour à la note courante (utilisateur ou moyenne)
+            star.addEventListener('mouseleave', function () {
+                // Étoiles jaunes jusqu'à currentRating, vides selon starColor
+                const baseColor = container.dataset.starColor || 'text-yellow-400';
+                updateStars(container, currentRating, 'text-yellow-400', baseColor);
+                if (label) {
+                    label.textContent = hasRated || currentRating > 0
+                        ? 'Votre note : ' + Math.round(currentRating) + '/5 — Modifier'
+                        : 'Cliquez pour noter';
+                }
+            });
+
+            // CLIC : envoi (création ou mise à jour)
+            star.addEventListener('click', function () {
+                const selectedRating = parseInt(this.dataset.value);
+
+                currentRating = selectedRating;
+
+                updateStars(container, selectedRating, 'text-yellow-400');
+                if (label) label.textContent = 'Votre note : ' + selectedRating + '/5 — Modifier';
+
+                container.dataset.userRating = selectedRating;
+
+                // Envoi au serveur
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ rating: selectedRating })
+                })
                     .then(response => response.json())
                     .then(data => {
                         console.log('Server response :', data);
                     });
-                });
             });
-        }
+        });
     });
 });

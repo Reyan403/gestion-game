@@ -18,6 +18,9 @@ class Category
     #[ORM\Column(length: 255, unique: true)]
     private string $name;
 
+    #[ORM\Column(length: 255)]
+    private string $twitchGameId;
+
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'categories')]
     private Collection $games;
 
@@ -39,5 +42,15 @@ class Category
     public function setName(string $newName) : void 
     {
         $this->name = $newName;
+    }
+
+    public function getTwitchGameId(): string 
+    {
+        return $this->twitchGameId;
+    }
+
+    public function setTwitchGameId(string $newTwitchGameId): void 
+    {
+        $this->twitchGameId = $newTwitchGameId;
     }
 }

@@ -8,6 +8,7 @@ use App\Entity\Note;
 use App\Form\CommentaryType;
 use App\Repository\CommentaryRepository;
 use App\Repository\NoteRepository;
+use App\Service\TwitchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameController extends AbstractController
 {
     #[Route('/game/{id}', name: 'app_game')]
-    public function index(Game $game, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager): Response {
+    public function index(Game $game, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response {
         
         // GESTION DU VOTE VIA JAVASCRIPT 
         if ($request->isMethod('POST') && str_contains($request->headers->get('Content-Type'), 'application/json')) {
@@ -63,6 +64,7 @@ final class GameController extends AbstractController
         }
 
         // ------------------- LA MOYENNE DE TOUTES LES NOTES ------------------------------
+
         $average = $noteRepository->averageNoteForGame($game);
 
         // On cherche si l'utilisateur connecté a déjà une note 
@@ -78,7 +80,14 @@ final class GameController extends AbstractController
             }
         }
 
+        // --------------------------- AFFICHE LE NOMBRE DE NOTES TOTAL ATTRIBUE POUR LE JEU ------------------------------
+
+        $totalNotes = $noteRepository->findBy([
+            'game' => $game
+        ]);
+
         // -------------------------- FORMULAIRE POUR ENTRER UN COMMENTAIRE ----------------------
+        
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
         $form->handleRequest($request);
@@ -123,12 +132,32 @@ final class GameController extends AbstractController
             ['createdAt' => 'DESC']
         );
 
+        // -------------------------- API TWITCH : RECUPERER LES JEUX EN FONCTION DE LA CATEGORIE ----------------------
+
+        $allTwitchIds = [];
+
+        // On récupère les IDs des catégories (Action, Aventure...)
+        foreach ($game->getCategories() as $category) {
+            if ($category->getTwitchGameId()) {
+                $ids = explode(',', $category->getTwitchGameId());
+                $allTwitchIds = array_merge($allTwitchIds, $ids);
+            }
+        }
+
+        $streams = [];
+        if (!empty($allTwitchIds)) {
+            // Recupère tous les lives
+            $streams = $twitchService->getStreamsByGameIds(array_unique($allTwitchIds));
+        }
+
         return $this->render('game/index.html.twig', [
             'game' => $game,
             'commentaryList' => $commentaryList,
             'average' => $average,
             'form' => $form,
-            'userRating' => $userRating, // On envoie la note à Twig
+            'userRating' => $userRating, 
+            'totalNotes' => $totalNotes,
+            'streams' => $streams
         ]);
     }
 }

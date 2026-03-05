@@ -26,7 +26,7 @@ class CommentaryType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Publier",
+                'label' => "Publier le commentaire",
             ])
         ;
     }
