@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block body %}
-	<div class="flex min-h-screen bg-[#0f1422] font-sans pt-15">
+	<div class="flex min-h-screen bg-[#0f1422] font-sans">
 		{{ include('composants/sidebar.html.twig') }}
 
 		<main class="flex-1 p-10">
 			{% include 'layout/flashes.html.twig' %}
-			<h1 class="text-[28px] font-bold text-white mb-8 tracking-wide">Mon Profil</h1>
+			<h1 class="text-[28px] font-bold text-white tracking-wide pb-8">Mon Profil</h1>
 
 			<div class="bg-[#1f2937] rounded-xl p-8 max-w-[800px] shadow-2xl border border-slate-700/50">
 				<div class="flex items-center gap-6 mb-8">

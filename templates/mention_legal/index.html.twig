@@ -1,20 +1,108 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MentionLegalController!{% endblock %}
+{% block title %}Mentions légales — GameHub
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<div
+		class="min-h-screen bg-[#0f1422] text-[#f1f1f1] font-sans">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		{# ── Lien retour ── #}
+		<div class="max-w-5xl mx-auto px-6 pt-10">
+			<a href="{{ path('app_home') }}" class="inline-flex items-center gap-2 text-base text-blue-400 hover:text-blue-300 transition-colors group">
+				<svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+				</svg>
+				Retour à l'accueil
+			</a>
+		</div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/ghazz/htdocs/php/gestion-game/src/Controller/MentionLegalController.php</code></li>
-        <li>Your template at <code>C:/xampp/ghazz/htdocs/php/gestion-game/templates/mention_legal/index.html.twig</code></li>
-    </ul>
-</div>
+		{# ── Contenu principal ── #}
+		<main class="max-w-5xl mx-auto px-6 py-10">
+
+			<div
+				class="bg-[#1e293b] rounded-xl p-8 md:p-12 border border-slate-700/50 space-y-10">
+
+				{# Titre #}
+				<div class="border-b border-slate-700/50 pb-6">
+					<h1 class="text-3xl font-bold text-white">Mentions légales</h1>
+				</div>
+
+				{# ── Éditeur du site ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Éditeur du site</h2>
+					<div class="space-y-1.5 text-sm text-gray-300">
+						<p>
+							<span class="text-gray-400">Nom :</span>
+							<span class="font-medium text-white">Twireweb</span>
+						</p>
+						<p>
+							<span class="text-gray-400">Contact :</span>
+							<a href="mailto:twireweb@gmail.com" class="text-blue-400 hover:text-blue-300 transition-colors">twireweb@gmail.com</a>
+						</p>
+					</div>
+				</section>
+
+				{# ── Hébergement ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Hébergement</h2>
+					<p class="text-sm text-gray-300 leading-relaxed">
+						Ce site est hébergé par un prestataire tiers. Pour toute question relative à l'hébergement, veuillez contacter l'éditeur à l'adresse indiquée ci-dessus.
+					</p>
+				</section>
+
+				{# ── Propriété intellectuelle ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Propriété intellectuelle</h2>
+					<div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+						<p>
+							L'ensemble des contenus présents sur ce site (textes, images, logos, données) sont la propriété de Twireweb ou de leurs auteurs respectifs, et sont protégés par les lois en vigueur sur la propriété intellectuelle. Toute reproduction, distribution ou utilisation sans autorisation préalable est strictement interdite.
+						</p>
+						<p>
+							Les noms, logos et contenus relatifs aux jeux vidéo appartiennent à leurs éditeurs et développeurs respectifs. Twireweb ne revendique aucun droit de propriété sur ces éléments.
+						</p>
+					</div>
+				</section>
+
+				{# ── Données personnelles ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Données personnelles</h2>
+					<div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+						<p>
+							Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition concernant vos données personnelles.
+						</p>
+						<p>
+							Pour exercer ces droits ou pour toute question relative au traitement de vos données, vous pouvez contacter Twireweb à l'adresse :
+							<a href="mailto:twireweb@gmail.com" class="text-blue-400 hover:text-blue-300 transition-colors">twireweb@gmail.com</a>
+						</p>
+					</div>
+				</section>
+
+				{# ── Cookies ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Cookies</h2>
+					<p class="text-sm text-gray-300 leading-relaxed">
+						Ce site peut utiliser des cookies à des fins de fonctionnement et d'amélioration de l'expérience utilisateur. Vous pouvez configurer votre navigateur pour refuser les cookies, sachant que certaines fonctionnalités du site pourraient en être affectées.
+					</p>
+				</section>
+
+				{# ── Limitation de responsabilité ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Limitation de responsabilité</h2>
+					<p class="text-sm text-gray-300 leading-relaxed">
+						Twireweb s'efforce de fournir des informations exactes et à jour, mais ne saurait être tenu responsable des erreurs ou omissions, ni des dommages résultant de l'utilisation de ce site. Les liens vers des sites tiers sont fournis à titre informatif ; Twireweb ne peut être tenu responsable de leurs contenus.
+					</p>
+				</section>
+
+				{# ── Droit applicable ── #}
+				<section>
+					<h2 class="text-lg font-semibold text-blue-400 mb-3">Droit applicable</h2>
+					<p class="text-sm text-gray-300 leading-relaxed">
+						Les présentes mentions légales sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents.
+					</p>
+				</section>
+
+			</div>
+		</main>
+	</div>
 {% endblock %}

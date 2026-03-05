@@ -15,15 +15,9 @@
 		class="min-h-screen bg-[#0a0a0a] text-[#f1f1f1] font-sans selection:bg-purple-500/35 selection:text-white">
 
 		{# ═══════════════════ HERO ═══════════════════ #}
-		<section
-			class="relative pt-[60px] min-h-screen flex items-center justify-center overflow-hidden">
-			{# Backgrounds #}
-			<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2665&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,rgba(88,28,135,0.4)_0%,transparent_70%)]"></div>
-			<div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+		<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
 
 			<div class="relative z-10 max-w-3xl px-6 text-center w-full pb-16">
-				<p class="text-purple-500 text-[0.7rem] font-bold tracking-[0.2em] uppercase mb-6">Explorez. Notez. Regardez.</p>
 				<h1 class="font-serif text-5xl md:text-6xl font-black leading-[1.1] text-white mb-5">
 					Votre univers
 					<span class="text-purple-500">gaming</span>
@@ -45,31 +39,6 @@
 					{% for tag in ["Call of duty: black ops 6", "Valorant", "Elden Ring", "Cyberpunk 2077", "Grand Theft Auto V", "League of Legends"] %}
 						<a href="#" class="text-xs text-gray-400 hover:text-white border border-white/10 hover:border-purple-500/30 hover:bg-purple-500/10 rounded px-2.5 py-1 transition-colors">{{ tag }}</a>
 					{% endfor %}
-				</div>
-
-				{# Stats #}
-				<div class="flex justify-center gap-8 sm:gap-16">
-					<div class="text-center flex flex-col items-center group">
-						<div class="mb-2 text-purple-500 group-hover:scale-110 transition-transform duration-300">
-							<svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-						</div>
-						<div class="text-2xl md:text-3xl font-black text-white tracking-tight">2 400+</div>
-						<div class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Jeux</div>
-					</div>
-					<div class="text-center flex flex-col items-center group">
-						<div class="mb-2 text-purple-500 group-hover:scale-110 transition-transform duration-300">
-							<svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-						</div>
-						<div class="text-2xl md:text-3xl font-black text-white tracking-tight">180</div>
-						<div class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Lives en cours</div>
-					</div>
-					<div class="text-center flex flex-col items-center group">
-						<div class="mb-2 text-purple-500 group-hover:scale-110 transition-transform duration-300">
-							<svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-						</div>
-						<div class="text-2xl md:text-3xl font-black text-white tracking-tight">52K</div>
-						<div class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Joueurs actifs</div>
-					</div>
 				</div>
 			</div>
 		</section>
@@ -131,39 +100,6 @@
 				</div>
 			</div>
 		</section>
-
-		{# ═══════════════════ PARCOURIR PAR GENRE ═══════════════════ #}
-		<section class="py-16 px-6 border-y border-white/5 bg-white/[0.01]">
-			<div class="max-w-7xl mx-auto text-center">
-				<p class="text-purple-500 text-[0.65rem] font-bold tracking-[0.2em] uppercase mb-3">Genres</p>
-				<h2 class="font-serif text-3xl sm:text-4xl font-black text-white mb-10">Parcourir par genre</h2>
-
-				<div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-					{% set genres = [
-						{name:"RPG", count:"342", path:"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.7-3.7a1 1 0 0 0 0-1.4l-1.6-1.6a1 1 0 0 0-1.4 0l-3.7 3.7ZM5 21l3-3 2 2-3 3M7 10l-4 4 2 2 4-4M19 19l-7-7-2 2 7 7M8 12 5 9M15 19l3-3"},
-						{name:"FPS", count:"278", path:"M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4Zm0-6a2 2 0 1 0 2 2 2 2 0 0 0-2-2Z"},
-						{name:"Course", count:"158", path:"M4 14h16c.6 0 1-.4 1-1V5c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v8c0 .6.4 1 1 1Zm0 7h.5c.3 0 .5-.2.5-.5V14h-2v6.5c0 .3.2.5.5.5ZM7 14h2v-2H7v2Zm4 0h2v-2h-2v2Zm4 0h2v-2h-2v2ZM7 10h2V8H7v2Zm4 0h2V8h-2v2Zm4 0h2V8h-2v2ZM7 6h2V4H7v2Zm4 0h2V4h-2v2Zm4 0h2V4h-2v2Z"},
-						{name:"Horreur", count:"134", path:"M12 2a8 8 0 0 0-8 8c0 5 4 11 8 12 4-1 8-7 8-12a8 8 0 0 0-8-8Zm-2 6a2 2 0 1 1 2 2 2 2 0 0 1-2-2Zm6 9a5 5 0 0 1-8 0 1 1 0 0 1 2 0 3 3 0 0 0 4 0 1 1 0 0 1 2 0Zm-2-7a2 2 0 1 1 2-2 2 2 0 0 1-2 2Z"},
-						{name:"Stratégie", count:"245", path:"M6 21v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2H6Zm2-11V8a1 1 0 0 0-1-1H4v6h3a1 1 0 0 0 1-1Zm7 0a1 1 0 0 0 1 1h3V7h-3a1 1 0 0 0-1 1v2Zm5-5V2h-5v3h5Zm-9 0V2H6v3h5ZM2 21h20"},
-						{name:"Aventure", count:"372", path:"M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm-1-13h2v4.6l3.3 3.3-1.4 1.4L11 11.4V7Z"},
-						{name:"Action", count:"388", path:"M13 2 3 14h9l-1 8 10-12h-9l1-8Z"},
-						{name:"Puzzle", count:"167", path:"M10 14h4v-4h-4v4Zm-6 0h4v-4H4v4Zm6 6h4v-4h-4v4Zm-6 0h4v-4H4v4Zm6-12h4V4h-4v4Zm-6 0h4V4H4v4Zm12 6h4v-4h-4v4Zm0 6h4v-4h-4v4Zm0-12h4V4h-4v4Z"}
-					] %}
-					{% for genre in genres %}
-						<div class="bg-[#111] border border-white/5 rounded-lg py-5 px-2 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all cursor-pointer group flex flex-col items-center">
-							<div class="mb-3 text-purple-500 group-hover:scale-110 transition-transform duration-300">
-								<svg class="w-7 h-7" fill="currentColor" viewbox="0 0 24 24"><path d="{{ genre.path }}"/></svg>
-							</div>
-							<div class="text-sm font-bold text-gray-200 mb-0.5 group-hover:text-white">{{ genre.name }}</div>
-							<div class="text-[0.65rem] text-gray-600 group-hover:text-gray-500">{{ genre.count }}
-								jeux</div>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-		</section>
-
-		{{ include('composants/footer.html.twig') }}
 
 	</div>
 {% endblock %}

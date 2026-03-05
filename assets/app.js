@@ -159,3 +159,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// ═══════════════════ BOUTON RETOUR EN HAUT ═══════════════════
+document.addEventListener('DOMContentLoaded', function () {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    const THRESHOLD = 50; // C'est la distance en pixel que l'utilisateur doit parcourir avant que le bouton apparaisse
+
+    if (!scrollBtn) return;
+
+    function toggleBtn() {
+        if (window.scrollY > THRESHOLD) {
+            scrollBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            scrollBtn.classList.add('opacity-100', 'translate-y-0');
+        } else {
+            scrollBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            scrollBtn.classList.remove('opacity-100', 'translate-y-0');
+        }
+    }
+
+    // Vérification au chargement 
+    toggleBtn();
+
+    window.addEventListener('scroll', toggleBtn, { passive: true });
+
+    // Défilement doux vers le haut
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
