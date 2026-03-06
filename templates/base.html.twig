@@ -18,6 +18,8 @@
 	<body>
 		{% include 'composants/header.html.twig' %}
 
+		{% include 'layout/flashes.html.twig' %}
+
 		{% block body %}{% endblock %}
 
 		{{ render(controller('App\\Controller\\LoginController::loginPopup')) }}

@@ -112,7 +112,7 @@ final class GameController extends AbstractController
 
                     $entityManager->flush();
 
-                    $this->addFlash('succès', 'Votre commentaire est en attente.');
+                    $this->addFlash('succès', 'Votre commentaire est en cours de modération.');
 
                     return $this->redirectToRoute('app_game', [
                         'id' => $game->getId(),

@@ -187,3 +187,24 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 });
+
+// ═══════════════════ BOUTONS ROLE ═══════════════════
+document.addEventListener('DOMContentLoaded', function () {
+    const btnAdd = document.getElementById('newRoleButton');
+    const formNew = document.getElementById('newRoleForm');
+    const btnCancel = document.getElementById('cancelNewRoleButton');
+
+    if (btnAdd) {
+        btnAdd.addEventListener('click', () => {
+            btnAdd.classList.add('hidden');
+            formNew.classList.remove('hidden');
+        })
+    }
+
+    if (btnCancel) {
+        btnCancel.addEventListener('click', () => {
+            formNew.classList.add('hidden');
+            btnAdd.classList.remove('hidden');
+        })
+    }
+});
