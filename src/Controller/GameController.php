@@ -94,6 +94,8 @@ final class GameController extends AbstractController
 
         if($form->isSubmitted()) {
             if($form->isValid()) {
+
+
                 try {
 
                     $commentary->setDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
@@ -107,6 +109,10 @@ final class GameController extends AbstractController
                     } else {
                         return $this->redirectToRoute('app_login');
                     }
+
+                    $commentary->setIsValidated(false);
+
+                    $commentary->setIsArchived(false);
 
                     $entityManager->persist($commentary);
 
@@ -126,10 +132,15 @@ final class GameController extends AbstractController
             }
         }
 
-        // Permet de chercher les commentaires pour chaque jeu dans l'ordre décroissant 
+        // Permet de chercher les commentaires pour chaque jeu dans l'ordre décroissant qui sont validés et pas archivés
         $commentaryList = $commentaryRepository->findBy(
-            ['game' => $game],
-            ['createdAt' => 'DESC']
+            [
+                'game' => $game,
+                'isValidated' => true,
+                'isArchived' => false,
+            ],
+
+            ['createdAt' => 'DESC'],
         );
 
         // -------------------------- API TWITCH : RECUPERER LES JEUX EN FONCTION DE LA CATEGORIE ----------------------

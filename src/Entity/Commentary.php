@@ -17,6 +17,12 @@ class Commentary
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
+    #[ORM\Column]
+    private bool $isValidated;
+
+    #[ORM\Column]
+    private bool $isArchived;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTime $createdAt;
 
@@ -72,5 +78,25 @@ class Commentary
     public function setDate(\DateTime $newDate): void 
     {
         $this->createdAt = $newDate;
+    }
+
+    public function isValidated(): bool 
+    {
+        return $this->isValidated;
+    }
+
+    public function setIsValidated(bool $newIsValidated): void
+    {
+        $this->isValidated = $newIsValidated;
+    }
+
+    public function isArchived(): bool 
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $newIsArchived): void
+    {
+        $this->isArchived = $newIsArchived;
     }
 }

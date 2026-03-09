@@ -6,11 +6,11 @@ use App\Entity\Role;
 use App\Form\RoleType;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 use function Symfony\Component\String\u;
 
 final class RoleManagementController extends AbstractController
@@ -19,6 +19,9 @@ final class RoleManagementController extends AbstractController
     #[Route('/role_management', name: 'app_role_management')]
     public function handleRequest(EntityManagerInterface $entityManager, Request $request, RoleRepository $roleRepository): Response 
     {   
+        // Vérifie si l'utilisateur est connecté et s'il a le bon rôle
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         // On récupère tous les rôles de la liste
         $roles = $roleRepository->findAll();
 
@@ -45,20 +48,48 @@ final class RoleManagementController extends AbstractController
         if($deleteId) {
             // Alors on vérifié si l'id est bien présent
             $roleToDelete = $roleRepository->find($deleteId); 
+
+            if($roleToDelete && $roleToDelete->getSymfonyRole() === 'ROLE_USER') {
+                $this->addFlash('erreur', 'Il est impossible de supprimer ce rôle.');
+            }
+
             // S'il est présent
-            if($roleToDelete) {
-                // On supprime le rôle
-                $entityManager->remove($roleToDelete);
+            if($roleToDelete && $roleToDelete->getSymfonyRole() !== 'ROLE_USER') {
 
-                $entityManager->flush();
+                // On va chercher tous les utilisateur possédant ce rôle
+                $userWithThisRole = $roleToDelete->getUsers();
 
-                $this->addFlash('succès', 'Le rôle a bien été supprimé.');
+                // On parcours la liste de ces utilisateurs
+                foreach ($userWithThisRole as $user) {
+                    // On retire le rôle supprimé de l'utilisateur
+                    $user->removeRole($roleToDelete);
 
-                } else {
-                    $this->addFlash('erreur', 'Rôle inexistant.');
+                    // Vérification de sécurité : si l'utilisateur n'a plus de rôles,
+                    // on s'assure qu'il récupère au moins le rôle de base.
+                    // On va chercher l'entité Role qui correspond à 'ROLE_USER'
+                    $defaultRole = $roleRepository->findOneBy(['symfonyRole' => 'ROLE_USER']);
+                    
+                    // On lui assigne le rôle par défaut après avoir supprimé le sien
+                    if ($defaultRole && !$user->getRolesEntities()->contains($defaultRole)) {
+                        $user->addRole($defaultRole);
+                    }
                 }
 
-            return $this->redirectToRoute('app_role_management');
+                // On supprime le rôle
+                try {
+
+                    $entityManager->remove($roleToDelete);
+
+                    $entityManager->flush();
+
+                    $this->addFlash('succès', 'Le rôle a bien été supprimé.');
+
+                } catch (\Exception $exception) {
+                    $this->addFlash('erreur', 'Un problème est survenu. Veuillez réessayer.');
+                }
+
+                return $this->redirectToRoute('app_role_management');
+            }
         }
 
         // Si la personne va choisir de créer un rôle
@@ -113,7 +144,12 @@ final class RoleManagementController extends AbstractController
         } else if ($editId) {
             // On vérifie que l'id de ce rôle existe déjà
             $role = $roleRepository->find($editId);
-            if($role) {
+
+            if($role && $role->getSymfonyRole() === 'ROLE_USER') {
+                $this->addFlash('erreur', 'Il est impossible de modifier ce rôle.');
+            }
+
+            if($role && $role->getSymfonyRole() !== 'ROLE_USER') {
                 $formEdit = $this->createForm(RoleType::class, $role);
                 $formEdit->handleRequest($request);
 
@@ -140,10 +176,10 @@ final class RoleManagementController extends AbstractController
         }
 
         return $this->render('role_management/index.html.twig', [
-            'formNew'  => $formNew, // Existe TOUJOURS
+            'formNew'  => $formNew, 
             'formEdit' => $formEdit ? $formEdit->createView() : null, // Existe seulement si editId est présent
             'editId' => $editId,
             'roles' => $roles,
         ]);
-    }
+    } 
 }

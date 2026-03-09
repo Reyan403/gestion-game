@@ -1,9 +1,9 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # https://symfony.com/doc/current/security.html#registering_the_user_hashing_passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    # https://symfony.com/doc/current/security.html#loading_the_user_the_user_provider
     providers:
         app_user_provider:
             entity:
@@ -29,25 +29,26 @@ security:
                 # target: app_any_route
 
             # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
+            # https://symfony.com/doc/current/security.html#the_firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/comment/moderation, roles: [ROLE_ADMIN, ROLE_MODERATOR] }
-        - { path: ^/game/validation, roles: [ROLE_ADMIN, ROLE_MODERATOR] }
-        - { path: ^/user-management, roles: ROLE_ADMIN }
-        - { path: ^/right-management, roles: ROLE_ADMIN }
-        - { path: ^/game-management, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: '^/comment_moderation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        - { path: '^/game_validation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        - { path: '^/user_management', roles: ROLE_ADMIN }
+        - { path: '^/right_management', roles: ROLE_ADMIN }
+        - { path: '^/game_management', roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: '^/role_management', roles: ROLE_ADMIN }
 
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:
         password_hashers:
-            # Password hashers are resource-intensive by design to ensure security.
+            # Password hashers are resource_intensive by design to ensure security.
             # In tests, it's safe to reduce their cost to improve performance.
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto

@@ -208,3 +208,27 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 });
+
+
+// ═══════════════════ PAGE ARCHIVE/EN ATTENTE ═══════════════════
+
+document.addEventListener('DOMContentLoaded', function () {
+    const contentEnAttente = document.getElementById('content-pending');
+    const contentArchive = document.getElementById('content-archive');
+    const btnEnAttente = document.getElementById('tab-pending');
+    const btnArchive = document.getElementById('tab-archive');
+
+    if(btnArchive) {
+        btnArchive.addEventListener('click', () => {
+            contentArchive.classList.remove('hidden');
+            contentEnAttente.classList.add('hidden');
+        })
+    } 
+
+    if(btnEnAttente) {
+        btnEnAttente.addEventListener('click', () => {
+            contentArchive.classList.add('hidden');
+            contentEnAttente.classList.remove('hidden');
+        })
+    }
+});
