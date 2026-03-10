@@ -36,12 +36,13 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: '^/comment_moderation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
-        - { path: '^/game_validation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
-        - { path: '^/user_management', roles: ROLE_ADMIN }
-        - { path: '^/right_management', roles: ROLE_ADMIN }
-        - { path: '^/game_management', roles: [ROLE_ADMIN, ROLE_EDITOR] }
-        - { path: '^/role_management', roles: ROLE_ADMIN }
+        # - { path: '^/comment_moderation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        # - { path: '^/game_validation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        # - { path: '^/game_validation', roles: [ROLE_ADMIN, ROLE_MODERATOR] }
+        # - { path: '^/user_management', roles: ROLE_ADMIN }
+        # - { path: '^/right_management', roles: ROLE_ADMIN }
+        # - { path: '^/game_management', roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        # - { path: '^/role_management', roles: ROLE_ADMIN }
 
         # - { path: ^/profile, roles: ROLE_USER }
 

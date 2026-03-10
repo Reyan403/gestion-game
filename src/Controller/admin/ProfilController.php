@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\admin;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -86,7 +86,7 @@ final class ProfilController extends AbstractController
             }
         }
 
-        return $this->render('profil/edit.html.twig', [
+        return $this->render('admin/profil/edit.html.twig', [
             'form' => $form,
             'user' => $user,
         ]);
