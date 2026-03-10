@@ -45,7 +45,7 @@ class TwitchService
         // Appel à l'API Helix.
         // language=fr : n'affiche que les streamers parlant français.
         // first=6 : limite le résultat aux 6 premiers lives (les plus populaires).
-        $streamsResponse = $this->httpClient->request('GET', 'https://api.twitch.tv/helix/streams?' . $urlParams . '&language=fr&first=6', [
+        $streamsResponse = $this->httpClient->request('GET', 'https://api.twitch.tv/helix/streams?' . $urlParams . '&language=fr&first=3', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $token, // On fournit le Token
                 'Client-Id' => $this->clientId,       // On rappelle l'ID client public

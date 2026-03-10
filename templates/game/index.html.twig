@@ -17,77 +17,6 @@
 					<div class="rounded-xl overflow-hidden shadow-lg border border-gray-800">
 						<img src="{{ asset(game.image) }}" alt="{{ game.title }}" class="w-full max-h-[500px] object-cover">
 					</div>
-
-					<div
-						class="bg-[#1e293b] rounded-xl p-6 shadow-md border border-gray-800">
-
-						{# Couleur des étoiles : orange si connecté et pas encore voté, jaune sinon #}
-						{% if app.user and userRating is null %}
-							{% set starColorClass = 'text-orange-400' %}
-						{% else %}
-							{% set starColorClass = 'text-yellow-400' %}
-						{% endif %}
-						{% set avg = average|default(0) %}
-
-						<div class="flex items-center gap-5 mb-8 flex-wrap">
-							<h1 class="text-4xl font-bold text-white">{{ game.title }}</h1>
-
-							{# Bloc étoiles unifié : affiche la moyenne ET permet de voter #}
-							<div class="flex items-center gap-3">
-								<div
-									id="rating-stars" data-movie-id="{{ game.id }}" data-url="{{ path('app_game', {'id': game.id}) }}" data-is-logged-in="{{ app.user ? 'true' : 'false' }}" data-user-rating="{{ userRating|default('') }}" data-average="{{ avg }}" data-star-color="{{ starColorClass }}" class="flex flex-row-reverse justify-end cursor-pointer select-none">
-									{# Les étoiles reflètent la moyenne au chargement #}
-									<span data-value="5" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 5 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 5 ? '★' : '☆' }}</span>
-									<span data-value="4" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 4 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 4 ? '★' : '☆' }}</span>
-									<span data-value="3" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 3 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 3 ? '★' : '☆' }}</span>
-									<span data-value="2" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 2 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 2 ? '★' : '☆' }}</span>
-									<span data-value="1" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 1 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 1 ? '★' : '☆' }}</span>
-								</div>
-
-								{# Note moyenne + compteur + label interactif #}
-								<div class="flex items-center gap-3">
-									<div class="flex flex-col">
-										<span class="text-xl font-bold text-yellow-400">
-											{{ average ? average|number_format(1, '.', '') : '0.0' }}
-											<span class="text-sm font-normal text-gray-500">/5</span>
-										</span>
-										<span class="text-sm font-normal text-gray-400">
-											(
-											{{ totalNotes|length }}
-											)
-										</span>
-									</div>
-
-									<span id="rating-label" class="text-sm text-gray-400">
-										{# Si l'utilisateur a déjà voté, on affiche sa note et un lien pour la modifier #}
-										{# Sinon si l'utilisateur est connecté, on affiche un lien pour noter #}
-										{# Sinon on affiche un lien pour se connecter #}
-											{% if userRating %}
-											Votre note :
-											{{ userRating }}
-											/5 &mdash; Cliquez pour modifier
-										{% elseif app.user %}
-											Cliquez pour noter
-										{% else %}
-											Connectez-vous pour noter
-										{% endif %}
-									</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="flex flex-wrap gap-3 mb-8">
-							{% for category in game.categories %}
-								<span class="px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-full min-w-[80px] text-center">{{ category.name }}</span>
-							{% else %}
-								<span class="px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-full min-w-[80px] text-center">Jeu</span>
-							{% endfor %}
-						</div>
-
-						<p class="text-gray-300 text-base leading-relaxed mb-10">
-							{{ game.description }}
-						</p>
-					</div>
 				</div>
 
 				<div class="lg:w-[450px] flex-shrink-0">
@@ -154,6 +83,76 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="bg-[#1e293b] rounded-xl p-6 shadow-md border border-gray-800 mt-8">
+
+				{# Couleur des étoiles : orange si connecté et pas encore voté, jaune sinon #}
+				{% if app.user and userRating is null %}
+					{% set starColorClass = 'text-orange-400' %}
+				{% else %}
+					{% set starColorClass = 'text-yellow-400' %}
+				{% endif %}
+				{% set avg = average|default(0) %}
+
+				<div class="flex items-center gap-5 mb-8 flex-wrap">
+					<h1 class="text-4xl font-bold text-white">{{ game.title }}</h1>
+
+					{# Bloc étoiles unifié : affiche la moyenne ET permet de voter #}
+					<div class="flex items-center gap-3">
+						<div
+							id="rating-stars" data-movie-id="{{ game.id }}" data-url="{{ path('app_game', {'id': game.id}) }}" data-is-logged-in="{{ app.user ? 'true' : 'false' }}" data-user-rating="{{ userRating|default('') }}" data-average="{{ avg }}" data-star-color="{{ starColorClass }}" class="flex flex-row-reverse justify-end cursor-pointer select-none">
+							{# Les étoiles reflètent la moyenne au chargement #}
+							<span data-value="5" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 5 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 5 ? '★' : '☆' }}</span>
+							<span data-value="4" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 4 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 4 ? '★' : '☆' }}</span>
+							<span data-value="3" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 3 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 3 ? '★' : '☆' }}</span>
+							<span data-value="2" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 2 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 2 ? '★' : '☆' }}</span>
+							<span data-value="1" class="star text-3xl leading-none transition-colors duration-150 {{ avg >= 1 ? 'text-yellow-400' : starColorClass }}">{{ avg >= 1 ? '★' : '☆' }}</span>
+						</div>
+
+						{# Note moyenne + compteur + label interactif #}
+						<div class="flex items-center gap-3">
+							<div class="flex flex-col">
+								<span class="text-xl font-bold text-yellow-400">
+									{{ average ? average|number_format(1, '.', '') : '0.0' }}
+									<span class="text-sm font-normal text-gray-500">/5</span>
+								</span>
+								<span class="text-sm font-normal text-gray-400">
+									(
+									{{ totalNotes|length }}
+									)
+								</span>
+							</div>
+
+							<span id="rating-label" class="text-sm text-gray-400">
+								{# Si l'utilisateur a déjà voté, on affiche sa note et un lien pour la modifier #}
+								{# Sinon si l'utilisateur est connecté, on affiche un lien pour noter #}
+								{# Sinon on affiche un lien pour se connecter #}
+									{% if userRating %}
+									Votre note :
+									{{ userRating }}
+									/5 &mdash; Cliquez pour modifier
+								{% elseif app.user %}
+									Cliquez pour noter
+								{% else %}
+									Connectez-vous pour noter
+								{% endif %}
+							</span>
+						</div>
+					</div>
+				</div>
+
+						<div class="flex flex-wrap gap-3 mb-8">
+							{% for category in game.categories %}
+								<span class="px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-full min-w-[80px] text-center">{{ category.name }}</span>
+							{% else %}
+								<span class="px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-full min-w-[80px] text-center">Jeu</span>
+							{% endfor %}
+						</div>
+
+						<p class="text-gray-300 text-base leading-relaxed mb-10">
+							{{ game.description }}
+						</p>
+					</div>
 
 			<div class="mt-8 bg-[#1e293b] rounded-xl p-8 shadow-md border border-gray-800">
 

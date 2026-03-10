@@ -19,7 +19,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameController extends AbstractController
 {
     #[Route('/game/{id}', name: 'app_game')]
-    public function index(Game $game, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response {
+    public function index(Game $game, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response 
+    {
         
         // GESTION DU VOTE VIA JAVASCRIPT 
         if ($request->isMethod('POST') && str_contains($request->headers->get('Content-Type'), 'application/json')) {

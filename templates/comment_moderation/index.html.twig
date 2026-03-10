@@ -52,16 +52,25 @@
 							{{ cis.getDescription() }}
 						</p>
 
-						<div class="flex gap-3">
-							<button class="bg-[#10b981] hover:bg-[#059669] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-								Approuver
-							</button>
-							<button class="bg-[#f97316] hover:bg-[#ea580c] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
-								Archiver
-							</button>
-						</div>
+						{# Permet d'aller chercher l'id des commentaires validés #}
+						<form method="POST" action="{{ path('app_comment_moderation', {'id': cis.id}) }}">
+
+							<input type="hidden" name="comment_moderation[_token]" value="{{ csrf_token('comment_moderation') }}">
+
+							<div class="flex gap-3">
+								{# BOUTON APPROUVER #}
+								<button type="submit" name="comment_moderation[approve]" class="bg-[#10b981] hover:bg-[#059669] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+									Approuver
+								</button>
+
+								{# BOUTON ARCHIVER #}
+								<button type="submit" name="comment_moderation[archive]" class="bg-[#f97316] hover:bg-[#ea580c] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+									Archiver
+								</button>
+							</div>
+						</form>
 					</div>
 				{% endfor %}
 			</div>
@@ -97,16 +106,23 @@
 							{{ cia.getDescription() }}
 						</p>
 
-						<div class="flex gap-3">
-							<button class="bg-[#266bfd] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-								Restaurer
-							</button>
-							<button class="bg-[#dc2626] hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-								Supprimer définitivement
-							</button>
-						</div>
+						{# Permet d'aller chercher l'id des commentaires archivés #}
+						<form method="POST" action="{{ path('app_comment_moderation', {'id': cia.id}) }}">
+							
+							<div class="flex gap-3">
+								{# BOUTON RESTAURER #}
+								<button type="submit" name="comment_moderation[restore]" class="bg-[#266bfd] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+									Restaurer
+								</button>
+
+								{# BOUTON SUPPRIMER #}
+								<button type="submit" name="comment_moderation[remove]" class="bg-[#dc2626] hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+									Supprimer définitivement
+								</button>
+							</div>
+						</form>
 					</div>
 				{% endfor %}
 			</div>
