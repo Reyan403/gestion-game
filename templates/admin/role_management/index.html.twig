@@ -31,20 +31,22 @@
 			</div>
 
 			{#  Formulaire : nouveau rôle #}
-			<div id="newRoleForm" class="hidden bg-[#232a39] border border-slate-700 rounded-2xl p-6 mb-6 shadow-xl">
-				<h2 class="text-white font-semibold text-base mb-4">Nouveau rôle</h2>
-				{{ form_start(formNew, {action: path('app_role_management', {action: 'new'}), attr: {class: 'flex items-center gap-3'}}) }}
-				{{ form_widget(formNew.name, {attr: {
-                    class: 'flex-1 bg-[#181f2e] border border-slate-600 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#266bfd] placeholder-slate-500',
-                }}) }}
-				<button type="submit" class="bg-[#266bfd] hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
-					Créer
-				</button>
-				<button id="cancelNewRoleButton" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
-					Annuler
-				</button>
-				{{ form_end(formNew) }}
-			</div>
+			{% if formNew is not null %}
+				<div id="newRoleForm" class="hidden bg-[#232a39] border border-slate-700 rounded-2xl p-6 mb-6 shadow-xl">
+					<h2 class="text-white font-semibold text-base mb-4">Nouveau rôle</h2>
+					{{ form_start(formNew, {action: path('app_role_management', {action: 'new'}), attr: {class: 'flex items-center gap-3'}}) }}
+					{{ form_widget(formNew.name, {attr: {
+						class: 'flex-1 bg-[#181f2e] border border-slate-600 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#266bfd] placeholder-slate-500',
+					}}) }}
+					<button type="submit" class="bg-[#266bfd] hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+						Créer
+					</button>
+					<button id="cancelNewRoleButton" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+						Annuler
+					</button>
+					{{ form_end(formNew) }}
+				</div>
+			{% endif %}
 
 			{#  Liste des rôles  #}
 			<div

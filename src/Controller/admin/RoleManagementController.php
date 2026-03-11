@@ -34,14 +34,7 @@ final class RoleManagementController extends AbstractController
              * ce qui provoquerait une erreur "Variable formEdit does not exist".
              */
             $formEdit = null;
-
-            /** * Pourquoi créer le formulaire de création ici (hors du "if") ? 
-             * C'est tout simplement pour que le formulaire soit toujours disponible, 
-             * même si on n'est pas en mode édition ou si on est en train de voir la liste des rôles.
-             * C'est pour dire que le formulaire existe toujours, même si on ne le voit pas à l'écran. 
-             */
-            $newRole = new Role();
-            $formNew = $this->createForm(RoleType::class, $newRole);
+            $formNew = null;
 
             // Si on parvient à récupèrer le paramètre deleteId
             if($deleteId) {
@@ -93,6 +86,8 @@ final class RoleManagementController extends AbstractController
 
             // Si la personne va choisir de créer un rôle
             if(!$editId) {
+                $newRole = new Role();
+                $formNew = $this->createForm(RoleType::class, $newRole);
                 $formNew->handleRequest($request);
 
                 if ($formNew->isSubmitted()) {
@@ -173,8 +168,8 @@ final class RoleManagementController extends AbstractController
         }
 
         return $this->render('admin/role_management/index.html.twig', [
-            'formNew'  => $formNew, 
-            'formEdit' => $formEdit ? $formEdit->createView() : null, // Existe seulement si editId est présent
+            'formNew'  => $formNew ? $formNew->createView() : null, 
+            'formEdit' => $formEdit ? $formEdit->createView() : null, 
             'editId' => $editId,
             'roles' => $roles,
         ]);

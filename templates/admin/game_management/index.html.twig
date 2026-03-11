@@ -153,58 +153,60 @@
 			</div>
 		</main>
 
-		<div id="popup_new_game" class="hidden">
-			{% embed 'composants/popup.html.twig' %}
+		{% if formNew is not null %}
+			<div id="popup_new_game" class="hidden">
+				{% embed 'composants/popup.html.twig' %}
 
-				{% block title %}
-					Nouveau jeu
-				{% endblock %}
+					{% block title %}
+						Nouveau jeu
+					{% endblock %}
 
-				{% block content %}
-					{% set inputClass = 'w-full bg-[#324059] border border-[#3f506b] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600' %}
-                    {% set labelClass = 'block text-[15px] font-bold text-gray-200 mb-2' %}
+					{% block content %}
+						{% set inputClass = 'w-full bg-[#324059] border border-[#3f506b] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600' %}
+						{% set labelClass = 'block text-[15px] font-bold text-gray-200 mb-2' %}
 
-					{{ form_start(formNew, {'attr': {'class': 'flex flex-col gap-5 pt-2'}}) }}
+						{{ form_start(formNew, {'attr': {'class': 'flex flex-col gap-5 pt-2'}}) }}
 
-					<div>
-						{{ form_label(formNew.title, null, {'label_attr': {'class': labelClass}}) }}
-						{{ form_widget(formNew.title, {'attr': {'class': inputClass}}) }}
-						{{ form_errors(formNew.title) }}
-					</div>
+						<div>
+							{{ form_label(formNew.title, null, {'label_attr': {'class': labelClass}}) }}
+							{{ form_widget(formNew.title, {'attr': {'class': inputClass}}) }}
+							{{ form_errors(formNew.title) }}
+						</div>
 
-					<div>
-						{{ form_label(formNew.image, null, {'label_attr': {'class': labelClass}}) }}
-						{{ form_widget(formNew.image, {'attr': {'class': inputClass}}) }}
-						{{ form_errors(formNew.image) }}
-					</div>
+						<div>
+							{{ form_label(formNew.image, null, {'label_attr': {'class': labelClass}}) }}
+							{{ form_widget(formNew.image, {'attr': {'class': inputClass}}) }}
+							{{ form_errors(formNew.image) }}
+						</div>
 
-					<div>
-						{{ form_label(formNew.description, null, {'label_attr': {'class': labelClass}}) }}
-						{{ form_widget(formNew.description, {'attr': {'class': inputClass ~ ' min-h-[120px] resize-y'}}) }}
-						{{ form_errors(formNew.description) }}
-					</div>
+						<div>
+							{{ form_label(formNew.description, null, {'label_attr': {'class': labelClass}}) }}
+							{{ form_widget(formNew.description, {'attr': {'class': inputClass ~ ' min-h-[120px] resize-y'}}) }}
+							{{ form_errors(formNew.description) }}
+						</div>
 
-					<div>
-						{{ form_label(formNew.categories, null, {'label_attr': {'class': labelClass}}) }}
-						{{ form_widget(formNew.categories, {'attr': {'class': inputClass}}) }}
-						{{ form_errors(formNew.categories) }}
-					</div>
+						<div>
+							{{ form_label(formNew.categories, null, {'label_attr': {'class': labelClass}}) }}
+							{{ form_widget(formNew.categories, {'attr': {'class': inputClass}}) }}
+							{{ form_errors(formNew.categories) }}
+						</div>
 
-					<div class="grid grid-cols-2 gap-5 mt-4">
-						<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
-                            Créer
-                        </button>
-						
-						<button type="button" id="btn_cancel_new_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] flex items-center justify-center">
-							Annuler
-						</button>
-					</div>
+						<div class="grid grid-cols-2 gap-5 mt-4">
+							<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
+								Créer
+							</button>
+							
+							<button type="button" id="btn_cancel_new_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] flex items-center justify-center">
+								Annuler
+							</button>
+						</div>
 
-					{{ form_end(formNew) }}
-				{% endblock %}
+						{{ form_end(formNew) }}
+					{% endblock %}
 
-			{% endembed %}
-		</div>
-
+				{% endembed %}
+			</div>
+		{% endif %}
+		
 	</section>
 {% endblock %}

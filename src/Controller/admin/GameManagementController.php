@@ -23,10 +23,11 @@ final class GameManagementController extends AbstractController
         $deleteId = $request->query->get('deleteId');
 
         $formEdit = null;
-        $newGame = new Game();
-        $formNew = $this->createForm(GameType::class, $newGame);
+        $formNew = null;
 
         if(!$editId) {
+            $newGame = new Game();
+            $formNew = $this->createForm(GameType::class, $newGame);
             $formNew->handleRequest($request);
 
             if($formNew->isSubmitted()) {
@@ -128,8 +129,10 @@ final class GameManagementController extends AbstractController
 
         return $this->render('admin/game_management/index.html.twig', [
             'game' => $game,
-            'formNew'  => $formNew, 
-            'formEdit' => $formEdit ? $formEdit->createView() : null, // Existe seulement si editId est présent
+            // Quand tu es sur la page "Ajouter", il envoie le formulaire d'ajout et null pour l'édition.
+            'formNew'  => $formNew ? $formNew->createView() : null, 
+            // Quand tu es sur la page "Modifier", il envoie le formulaire d'édition et null pour l'ajout.
+            'formEdit' => $formEdit ? $formEdit->createView() : null,
             'editId' => $editId,
         ]);
     }
