@@ -1,20 +1,210 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GameManagementController!{% endblock %}
+{% block title %}Gestion des jeux
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+	<section class="flex min-h-screen bg-[#181f2e] font-sans">
+		{{ include('composants/sidebar.html.twig') }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/ghazz/htdocs/php/gestion-game/src/Controller/GameManagementController.php</code></li>
-        <li>Your template at <code>C:/xampp/ghazz/htdocs/php/gestion-game/templates/game_management/index.html.twig</code></li>
-    </ul>
-</div>
+		<main class="flex-1 p-8 text-white">
+
+			<div class="flex justify-between items-center mb-10 mt-2">
+				<h1 class="text-white text-2xl font-bold">Gestion des Jeux</h1>
+				<button id="btn_new_game" class="bg-[#3b82f6] hover:bg-blue-600 transition-colors text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/30">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+					</svg>
+					Nouveau jeu
+				</button>
+			</div>
+
+			<div class="bg-[#1f2839] rounded-xl overflow-hidden shadow-xl border border-[#2b3548]">
+				<table class="w-full text-left border-collapse">
+					<thead>
+						<tr class="bg-[#293448] text-[15px] font-bold text-gray-200 border-b border-[#3b475c]">
+							<th class="px-6 py-5">Jeu</th>
+							<th class="px-6 py-5">Description</th>
+							<th class="px-6 py-5">Catégories</th>
+							<th class="px-6 py-5 text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-[#2b3548] text-[15px]">
+
+						{% for g in game %}
+							<tr class="hover:bg-[#252f43] transition-colors">
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="flex items-center gap-4">
+										<div class="h-[46px] w-[82px] bg-gray-700 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
+											<img src="{{ asset(g.image) }}" alt="{{ g.getTitle() }}" class="h-full w-full object-cover">
+										</div>
+										<span class="font-medium text-gray-100">{{ g.getTitle() }}</span>
+									</div>
+								</td>
+
+								{% if g.getDescription()|length > 50 %}
+									<td class="px-6 py-4 whitespace-nowrap text-gray-300">
+										{{ g.getDescription()|slice(0, 50) ~ '...' }}
+									</td>
+								{% else %}
+									<td class="px-6 py-4 whitespace-nowrap text-gray-300">
+										{{ g.getDescription() }}
+									</td>
+								{% endif %}
+
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div
+										class="flex items-center gap-2">
+
+										{# Stocke la liste de toutes les catégories du jeu dans la variable "categories" #}
+										{% set categories = g.getCategories() %}
+
+										{# Vérifie si le jeu possède au moins une catégorie (pour éviter les erreurs) #}
+										{% if categories|length > 0 %}
+											<span
+												class="px-2.5 py-1 bg-[#3b82f6] text-white text-[13px] font-semibold rounded-md shadow-sm">
+
+												{# Cible le tout premier élément de la liste et affiche son nom #}
+												{{ (categories|first).getName() }}
+											</span>
+											{% if categories|length > 1 %}
+
+												{# Affiche "+" suivi du nombre total de catégories, moins 1 (celle déjà affichée) #}
+												+{{ categories|length - 1 }}
+											{% endif %}
+										{% endif %}
+									</div>
+								</td>
+
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="flex items-center justify-center gap-5">
+										<a href="{{ path('app_game_management', {editId: g.id}) }}" class="text-[#60a5fa] hover:text-blue-300 transition-colors" title="Modifier">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-[21px] w-[21px]" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+											</svg>
+										</a>
+										<a href="{{ path('app_game_management', {deleteId: g.id}) }}" class="text-[#f87171] hover:text-red-400 transition-colors" title="Supprimer" onclick="return confirm('Voulez-vous supprimer ce jeu ?')">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-[21px] w-[21px]" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+
+							{% if editId == g.id and formEdit %}
+								<div>
+									{% embed 'composants/popup.html.twig' %}
+
+										{% block title %}
+											Modifier le jeu
+										{% endblock %}
+
+										{% block content %}
+											{% set inputClass = 'w-full bg-[#324059] border border-[#3f506b] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600' %}
+											{% set labelClass = 'block text-[15px] font-bold text-gray-200 mb-2' %}
+
+											{{ form_start(formEdit, {'attr': {'class': 'flex flex-col gap-5 pt-2'}}) }}
+
+											<div>
+												{{ form_label(formEdit.title, null, {'label_attr': {'class': labelClass}}) }}
+												{{ form_widget(formEdit.title, {'attr': {'class': inputClass}}) }}
+												{{ form_errors(formEdit.title) }}
+											</div>
+
+											<div>
+												{{ form_label(formEdit.image, null, {'label_attr': {'class': labelClass}}) }}
+												{{ form_widget(formEdit.image, {'attr': {'class': inputClass}}) }}
+												{{ form_errors(formEdit.image) }}
+											</div>
+
+											<div>
+												{{ form_label(formEdit.description, null, {'label_attr': {'class': labelClass}}) }}
+												{{ form_widget(formEdit.description, {'attr': {'class': inputClass ~ ' min-h-[120px] resize-y'}}) }}
+												{{ form_errors(formEdit.description) }}
+											</div>
+
+											<div>
+												{{ form_label(formEdit.categories, null, {'label_attr': {'class': labelClass}}) }}
+												{{ form_widget(formEdit.categories, {'attr': {'class': inputClass}}) }}
+												{{ form_errors(formEdit.categories) }}
+											</div>
+
+											<div class="grid grid-cols-2 gap-5 mt-4">
+												<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
+                                                    Modifier
+                                                </button>
+												
+												<a href="{{ path('app_game_management') }}" id="btn_cancel_edit_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] text-center flex items-center justify-center">
+													Annuler
+												</a>
+											</div>
+
+											{{ form_end(formEdit) }}
+										{% endblock %}
+
+									{% endembed %}
+								{% endif %}
+							{% endfor %}
+						</tbody>
+					</tbody>
+				</table>
+			</div>
+		</main>
+
+		<div id="popup_new_game" class="hidden">
+			{% embed 'composants/popup.html.twig' %}
+
+				{% block title %}
+					Nouveau jeu
+				{% endblock %}
+
+				{% block content %}
+					{% set inputClass = 'w-full bg-[#324059] border border-[#3f506b] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600' %}
+                    {% set labelClass = 'block text-[15px] font-bold text-gray-200 mb-2' %}
+
+					{{ form_start(formNew, {'attr': {'class': 'flex flex-col gap-5 pt-2'}}) }}
+
+					<div>
+						{{ form_label(formNew.title, null, {'label_attr': {'class': labelClass}}) }}
+						{{ form_widget(formNew.title, {'attr': {'class': inputClass}}) }}
+						{{ form_errors(formNew.title) }}
+					</div>
+
+					<div>
+						{{ form_label(formNew.image, null, {'label_attr': {'class': labelClass}}) }}
+						{{ form_widget(formNew.image, {'attr': {'class': inputClass}}) }}
+						{{ form_errors(formNew.image) }}
+					</div>
+
+					<div>
+						{{ form_label(formNew.description, null, {'label_attr': {'class': labelClass}}) }}
+						{{ form_widget(formNew.description, {'attr': {'class': inputClass ~ ' min-h-[120px] resize-y'}}) }}
+						{{ form_errors(formNew.description) }}
+					</div>
+
+					<div>
+						{{ form_label(formNew.categories, null, {'label_attr': {'class': labelClass}}) }}
+						{{ form_widget(formNew.categories, {'attr': {'class': inputClass}}) }}
+						{{ form_errors(formNew.categories) }}
+					</div>
+
+					<div class="grid grid-cols-2 gap-5 mt-4">
+						<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
+                            Créer
+                        </button>
+						
+						<button type="button" id="btn_cancel_new_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] flex items-center justify-center">
+							Annuler
+						</button>
+					</div>
+
+					{{ form_end(formNew) }}
+				{% endblock %}
+
+			{% endembed %}
+		</div>
+
+	</section>
 {% endblock %}

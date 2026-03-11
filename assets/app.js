@@ -232,3 +232,26 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 });
+
+
+// ═══════════════════ POPUP EDIT/NEW GAME ═══════════════════
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const btnNewGame = document.getElementById('btn_new_game');
+    const btnCancelNewGame = document.getElementById('btn_cancel_new_game');
+    const popupNewGame = document.getElementById('popup_new_game');
+
+    if (btnNewGame) {
+        btnNewGame.addEventListener('click', () => {
+            popupNewGame.classList.remove('hidden');
+        });
+    }
+
+    if (btnCancelNewGame) {
+        btnCancelNewGame.addEventListener('click', () => {
+            popupNewGame.classList.add('hidden');
+        });
+    }
+
+});

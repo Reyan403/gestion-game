@@ -1,87 +1,17 @@
-{% extends 'base.html.twig' %}
+<div id="popup-container" class="fixed top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center py-6">
+	<div class="bg-[#1e293b] w-full max-w-2xl mx-4 rounded-xl shadow-2xl relative flex flex-col max-h-full">
 
-{% block body %}
-	<div id="popup-container" class="fixed top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center py-6">
-		<div
-			class="bg-[#1e293b] w-full max-w-2xl mx-4 rounded-xl shadow-2xl relative flex flex-col max-h-full">
-			<!-- En-tête -->
-			<div class="px-8 pt-6 pb-4 flex-shrink-0 flex justify-between items-center">
-				<h2 class="text-2xl font-bold text-white tracking-wide">Nouveau jeu</h2>
-			</div>
-
-			<!-- Contenu -->
-			<div class="px-8 pb-8 overflow-y-auto custom-popup-scrollbar flex-1">
-				<form action="#" method="POST" class="space-y-5">
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">Titre</label>
-						<input type="text" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-					</div>
-
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">URL de l'image</label>
-						<input type="text" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-					</div>
-
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">Description</label>
-						<textarea class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[140px] resize-y"></textarea>
-					</div>
-
-					<div class="flex flex-col sm:flex-row gap-4">
-						<div class="flex-1">
-							<label class="block text-white font-bold text-sm mb-2">Développeur</label>
-							<input type="text" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-						</div>
-						<div class="flex-1">
-							<label class="block text-white font-bold text-sm mb-2">Éditeur</label>
-							<input type="text" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-						</div>
-					</div>
-
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">Date de sortie</label>
-						<input type="date" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 [color-scheme:dark]">
-					</div>
-
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">Catégories (séparées par des virgules)</label>
-						<input type="text" placeholder="Action, RPG, Adventure" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-					</div>
-
-					<div>
-						<label class="block text-white font-bold text-sm mb-2">Plateformes (séparées par des virgules)</label>
-						<input type="text" placeholder="PC, PS5, Xbox Series" class="w-full bg-[#2d3748] border border-gray-600 rounded-lg p-3 text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-					</div>
-
-					<!-- Boutons -->
-					<div class="flex gap-4 pt-4 mt-2">
-						<button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors border-none shadow-sm shadow-blue-500/20">
-							Créer
-						</button>
-						<button type="button" class="flex-1 bg-[#374151] hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-colors border-none">
-							Annuler
-						</button>
-					</div>
-				</form>
-			</div>
+		<!-- Header -->
+		<div class="px-8 pt-6 pb-4 flex justify-between items-center">
+			<h2 class="text-2xl font-bold text-white tracking-wide">
+				{% block title %}{% endblock %}
+			</h2>
 		</div>
+
+		<!-- Content -->
+		<div class="px-8 pb-8 overflow-y-auto custom-popup-scrollbar flex-1">
+			{% block content %}{% endblock %}
+		</div>
+
 	</div>
-
-	<style>
-		.custom-popup-scrollbar::-webkit-scrollbar {
-			width: 6px;
-		}
-		.custom-popup-scrollbar::-webkit-scrollbar-track {
-			background: transparent;
-			margin: 4px;
-		}
-		.custom-popup-scrollbar::-webkit-scrollbar-thumb {
-			background-color: #4b5563; /* Gris */
-			border-radius: 8px;
-		}
-		.custom-popup-scrollbar::-webkit-scrollbar-thumb:hover {
-			background-color: #6b7280;
-		}
-	</style>
-
-{% endblock %}
+</div>
