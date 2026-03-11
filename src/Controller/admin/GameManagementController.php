@@ -27,8 +27,6 @@ final class GameManagementController extends AbstractController
         $formNew = $this->createForm(GameType::class, $newGame);
 
         if(!$editId) {
-            $newGame = new Game();
-            $formNew = $this->createForm(GameType::class, $newGame);
             $formNew->handleRequest($request);
 
             if($formNew->isSubmitted()) {

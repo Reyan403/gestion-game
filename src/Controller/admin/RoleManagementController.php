@@ -93,9 +93,6 @@ final class RoleManagementController extends AbstractController
 
             // Si la personne va choisir de créer un rôle
             if(!$editId) {
-
-                $role = new Role();
-                $formNew = $this->createForm(RoleType::class, $role);
                 $formNew->handleRequest($request);
 
                 if ($formNew->isSubmitted()) {
@@ -113,7 +110,7 @@ final class RoleManagementController extends AbstractController
                     elseif($formNew->isValid()) {
                         try {
                             // On récupère le nom du rôle
-                            $name = $role->getName(); // ex: "Modérateur" ou "Super Admin"
+                            $name = $newRole->getName(); // ex: "Modérateur" ou "Super Admin"
 
                             $symfonyRole = u($name)
                                 ->ascii()            // Enlève les accents (é -> e)
@@ -122,9 +119,9 @@ final class RoleManagementController extends AbstractController
                                 ->prepend('ROLE_');  // Ajoute le préfixe
 
                             // On définit le code Symfony ex : "ROLE_MODERATEUR" ou "ROLE_SUPER_ADMIN"
-                            $role->setSymfonyRole($symfonyRole->toString());
+                            $newRole->setSymfonyRole($symfonyRole->toString());
 
-                            $entityManager->persist($role);
+                            $entityManager->persist($newRole);
                             $entityManager->flush();
 
                             $this->addFlash('succès', 'Un nouveau rôle a été ajouté.');
