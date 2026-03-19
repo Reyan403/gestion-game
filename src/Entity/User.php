@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this mail')]
+#[UniqueEntity(fields: ['mail'], message: 'Il existe déjà un compte avec cet email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -29,6 +29,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private string $password;
 
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user')]
+    private Collection $games;
+
+    #[ORM\OneToMany(targetEntity: GameUpdate::class, mappedBy: 'user')]
+    private Collection $gamesUpdate;
+
     // mappedBy : celui qui n'a pas la clef étrangère dans sa table
     #[ORM\OneToMany(targetEntity: Commentary::class, mappedBy: 'user')]
     private Collection $commentaries;
@@ -36,16 +42,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // inversedBy : on va se poser la question : "Et si l'utilisateur n'a le droit que d'un seul rôle ?".
     // Alors il va prendre la clef étrangère dans sa table
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
-    private Collection $roles;
+    private Collection $rolesEntities;
 
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user')]
     private Collection $notes;
 
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'isValidatedBy')]
+    private Collection $gameValidatedBy;
+
     public function __construct() 
     {
-        $this->roles = new ArrayCollection();
+        $this->rolesEntities = new ArrayCollection();
         $this->commentaries = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->gamesUpdate = new ArrayCollection();
+        $this->gameValidatedBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,7 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = [];
 
-        foreach ($this->roles as $role) {
+        foreach ($this->rolesEntities as $role) {
             $roles[] = $role->getSymfonyRole(); // ex: "ROLE_ADMIN", "ROLE_MODERATOR"
         }
 
@@ -120,7 +132,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     */
     public function getRolesEntities(): Collection 
     {
-        return $this->roles;
+        return $this->rolesEntities;
     }
 
     public function getCommentaries(): Collection
@@ -133,10 +145,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notes;
     }
 
+    public function getGame(): Collection
+    {
+        return $this->games;
+    }
+
+    public function getGameUpdate(): Collection
+    {
+        return $this->gamesUpdate;
+    }
+
+    public function getGameValidatedBy(): Collection 
+    {
+        return $this->gameValidatedBy;
+    }
+
+
     public function addRole(Role $role): self 
     {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
+        if (!$this->rolesEntities->contains($role)) {
+            $this->rolesEntities->add($role);
         }
 
         return $this;
@@ -160,21 +188,73 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function addGame(Game $game): self 
+    {
+        if ($this->games->contains($game)) {
+            $this->games->add($game);
+        }
+
+        return $this;
+    }
+
+    public function addGameUpdate(GameUpdate $gameUpdate): self 
+    {
+        if ($this->gamesUpdate->contains($gameUpdate)) {
+            $this->gamesUpdate->add($gameUpdate);
+        }
+
+        return $this;
+    }
+
+    public function addGameValidatedBy(Game $newGameValidatedBy): self 
+    {
+        if ($this->gameValidatedBy->contains($newGameValidatedBy)) {
+            $this->gameValidatedBy->add($newGameValidatedBy);
+        }
+
+        return $this;
+    }
+
+
     public function removeRole(Role $role): self 
     {
-        $this->roles->removeElement($role);
+        $this->rolesEntities->removeElement($role);
+        
         return $this;
     }
 
     public function removeCommentary(Commentary $commentary): self 
     {
         $this->commentaries->removeElement($commentary);
+
         return $this;
     }
 
     public function removeNote(Note $note): self 
     {
         $this->notes->removeElement($note);
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): self 
+    {
+        $this->games->removeElement($game);
+
+        return $this;
+    }
+
+    public function removeGameUpdate(GameUpdate $gameUpdate): self 
+    {
+        $this->gamesUpdate->removeElement($gameUpdate);
+
+        return $this;
+    }
+
+    public function removeGameValidatedBy(Game $newGameValidatedBy): self 
+    {
+        $this->gameValidatedBy->removeElement($newGameValidatedBy);
+
         return $this;
     }
 }

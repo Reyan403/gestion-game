@@ -23,7 +23,7 @@ class Role
     #[ORM\Column(length: 255, unique: true)]
     private string $symfonyRole;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'rolesEntities')]
     private Collection $users;
 
     #[ORM\ManyToMany(targetEntity: Right::class, inversedBy: 'roles')]

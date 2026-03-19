@@ -7,6 +7,7 @@ use App\Entity\Game;
 use App\Entity\Note;
 use App\Form\CommentaryType;
 use App\Repository\CommentaryRepository;
+use App\Repository\GameRepository;
 use App\Repository\NoteRepository;
 use App\Service\TwitchService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,8 +20,14 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameController extends AbstractController
 {
     #[Route('/game/{id}', name: 'app_game')]
-    public function index(Game $game, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response 
+    public function index(Game $game, GameRepository $gameRepository, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response 
     {
+
+        // On vérifie si le jeu demandé est validé 
+        if (!$game->isValidated()) {
+            // Si ce n'est pas le cas, on affiche une erreur 404
+            throw $this->createNotFoundException('Ce jeu n\'est pas disponible ou n\'a pas encore été validé.');
+        }
         
         // GESTION DU VOTE VIA JAVASCRIPT 
         if ($request->isMethod('POST') && str_contains($request->headers->get('Content-Type'), 'application/json')) {

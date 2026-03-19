@@ -38,7 +38,7 @@ final class CommentModerationController extends AbstractController
             // Cette ligne génère un URL en récupérant l'id du commentaire. 
             $id = $request->query->get('id');
 
-            $form = $this->createForm(CommentModerationType::class);
+            $form = null;
 
             if($id) {
                 $commentary = $commentaryRepository->find($id);

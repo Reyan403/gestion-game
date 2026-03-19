@@ -24,9 +24,13 @@ class Category
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'categories')]
     private Collection $games;
 
+    #[ORM\ManyToMany(targetEntity: GameUpdate::class, mappedBy: 'categoriesUpdate')]
+    private Collection $gamesUpdate;
+
     public function __construct() 
     {
         $this->games = new ArrayCollection();
+        $this->gamesUpdate = new ArrayCollection();
     }
 
     public function getId(): ?int

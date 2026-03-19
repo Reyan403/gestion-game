@@ -127,15 +127,16 @@
 
 											<div>
 												{{ form_label(formEdit.categories, null, {'label_attr': {'class': labelClass}}) }}
-												{{ form_widget(formEdit.categories, {'attr': {'class': inputClass}}) }}
+												{% set checkboxContainerClass = 'grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#252f43] border border-[#3f506b] rounded-xl p-4 max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-[#4a5f80] scrollbar-track-transparent [&>div]:flex [&>div]:items-center [&>div]:gap-3 [&>div]:px-4 [&>div]:py-3 [&>div]:bg-[#181f2e] [&>div]:border [&>div]:border-[#3f506b] [&>div]:rounded-lg hover:[&>div]:border-blue-500 hover:[&>div]:bg-[#1c2436] [&>div]:transition-colors [&_input]:w-5 [&_input]:h-5 [&_input]:text-blue-500 [&_input]:bg-[#252f43] [&_input]:border-[#4a5f80] [&_input]:rounded focus:[&_input]:ring-blue-500 focus:[&_input]:ring-2 [&_input]:cursor-pointer [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-200 [&_label]:cursor-pointer [&_label]:flex-1 [&_label]:mb-0 [&_label]:select-none' %}
+												{{ form_widget(formEdit.categories, {'attr': {'class': checkboxContainerClass}}) }}
 												{{ form_errors(formEdit.categories) }}
 											</div>
 
 											<div class="grid grid-cols-2 gap-5 mt-4">
 												<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
-                                                    Modifier
-                                                </button>
-												
+													Modifier
+												</button>
+
 												<a href="{{ path('app_game_management') }}" id="btn_cancel_edit_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] text-center flex items-center justify-center">
 													Annuler
 												</a>
@@ -154,7 +155,7 @@
 		</main>
 
 		{% if formNew is not null %}
-			<div id="popup_new_game" class="hidden">
+			<div id="popup_new_game" class="{% if openNewGamePopup is defined and openNewGamePopup %}{% else %}hidden{% endif %}">
 				{% embed 'composants/popup.html.twig' %}
 
 					{% block title %}
@@ -187,7 +188,8 @@
 
 						<div>
 							{{ form_label(formNew.categories, null, {'label_attr': {'class': labelClass}}) }}
-							{{ form_widget(formNew.categories, {'attr': {'class': inputClass}}) }}
+							{% set checkboxContainerClass = 'grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#252f43] border border-[#3f506b] rounded-xl p-4 max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-[#4a5f80] scrollbar-track-transparent [&>div]:flex [&>div]:items-center [&>div]:gap-3 [&>div]:px-4 [&>div]:py-3 [&>div]:bg-[#181f2e] [&>div]:border [&>div]:border-[#3f506b] [&>div]:rounded-lg hover:[&>div]:border-blue-500 hover:[&>div]:bg-[#1c2436] [&>div]:transition-colors [&_input]:w-5 [&_input]:h-5 [&_input]:text-blue-500 [&_input]:bg-[#252f43] [&_input]:border-[#4a5f80] [&_input]:rounded focus:[&_input]:ring-blue-500 focus:[&_input]:ring-2 [&_input]:cursor-pointer [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-200 [&_label]:cursor-pointer [&_label]:flex-1 [&_label]:mb-0 [&_label]:select-none' %}
+							{{ form_widget(formNew.categories, {'attr': {'class': checkboxContainerClass}}) }}
 							{{ form_errors(formNew.categories) }}
 						</div>
 
@@ -195,7 +197,7 @@
 							<button type="submit" class="w-full bg-[#2563eb] hover:bg-blue-600 transition-colors text-white py-3 rounded-lg font-bold text-[15px] shadow-lg shadow-blue-500/20">
 								Créer
 							</button>
-							
+
 							<button type="button" id="btn_cancel_new_game" class="w-full bg-[#3b475c] hover:bg-[#4a586e] transition-colors text-white py-3 rounded-lg font-bold text-[15px] flex items-center justify-center">
 								Annuler
 							</button>
@@ -207,6 +209,6 @@
 				{% endembed %}
 			</div>
 		{% endif %}
-		
+
 	</section>
 {% endblock %}

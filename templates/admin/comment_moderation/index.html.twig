@@ -55,8 +55,6 @@
 						{# Permet d'aller chercher l'id des commentaires validés #}
 						<form method="POST" action="{{ path('app_comment_moderation', {'id': cis.id}) }}">
 
-							<input type="hidden" name="comment_moderation[_token]" value="{{ csrf_token('comment_moderation') }}">
-
 							<div class="flex gap-3">
 								{# BOUTON APPROUVER #}
 								<button type="submit" name="comment_moderation[approve]" class="bg-[#10b981] hover:bg-[#059669] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">

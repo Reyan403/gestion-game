@@ -3,8 +3,12 @@
 namespace App\Controller\admin;
 
 use App\Entity\Game;
+use App\Entity\GameUpdate;
 use App\Form\GameType;
+use App\Form\GameUpdateType;
 use App\Repository\GameRepository;
+use App\Repository\GameUpdateRepository;
+use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -15,15 +19,17 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameManagementController extends AbstractController
 {
     #[Route('/game_management', name: 'app_game_management')]
-    public function index(GameRepository $gameRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir): Response
+    public function index(GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, StatusRepository $statusRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir): Response
     {
-        $game = $gameRepository->findAll();
+        $game = $gameRepository->findJeuxApprouvesSansModifEnAttente();
 
+        // On va chercher l'id du jeu dans l'URL
         $editId = $request->query->get('editId');
         $deleteId = $request->query->get('deleteId');
 
         $formEdit = null;
         $formNew = null;
+        $openNewGamePopup = false;
 
         if(!$editId) {
             $newGame = new Game();
@@ -46,50 +52,92 @@ final class GameManagementController extends AbstractController
                         $newGame->setImage('img/' . $fileName);
                     }
 
-                    try {
+                    $existingGame = $gameRepository->findOneBy(['title' => $newGame->getTitle()]);
+                    if ($existingGame) {
+                        $this->addFlash('erreur', 'Un jeu avec ce titre existe déjà.');
+                        $openNewGamePopup = true;
+                    } else {
+                        try {
+
+                        $newGame->setIsValidated(false);
+                        $newGame->setIsArchived(false);
+                        $newGame->setUser($this->getUser()); 
+                        $newGame->setDateCreated(new \DateTime('now'));
 
                         $entityManager->persist($newGame);
                         $entityManager->flush();
-                        $this->addFlash('succès', 'Le jeu a été ajouté.');
+                        $this->addFlash('succès', 'Le jeu est en cours de modération.');
 
                         return $this->redirectToRoute('app_game_management');
 
-                    } catch (\Exception $exception) {
-                        $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
+                        } catch (\Exception $exception) {
+                            $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
+                            $openNewGamePopup = true;
+                        }
                     }
+        
                 } else {
                     $this->addFlash('erreur', 'Le formulaire est invalide.');
+                    $openNewGamePopup = true;
                 }
             }
         } else if ($editId) {
             // On vérifie que l'id de ce jeu existe déjà
             $editGame = $gameRepository->find($editId);
 
-            $formEdit = $this->createForm(GameType::class, $editGame);
+            $gameUpdate = new GameUpdate();
+            $gameUpdate->setGame($editGame);
+            $gameUpdate->setUser($this->getUser());
+
+            // Copier les données existantes dans GameUpdate pour pré-remplir le formulaire
+            $gameUpdate->setTitle($editGame->getTitle());
+            $gameUpdate->setDescription($editGame->getDescription());
+            $gameUpdate->setImage($editGame->getImage());
+
+            // Si tu veux aussi copier les catégories
+            foreach ($editGame->getCategories() as $category) {
+                $gameUpdate->addCategory($category);
+            }
+
+            $formEdit = $this->createForm(GameUpdateType::class, $gameUpdate);
             $formEdit->handleRequest($request);
 
-            if($formEdit->isSubmitted()) {
-                if($formEdit->isValid()) {
+            if ($formEdit->isSubmitted()) {
+                if ($formEdit->isValid()) {
 
-                    if($image = $formEdit['image']->getData()) {
-                        $fileName = uniqid().'.'.$image->guessExtension();
+                    if ($image = $formEdit['image']->getData()) {
+                        $fileName = uniqid() . '.' . $image->guessExtension();
                         $image->move($imageDir, $fileName);
-
-                        $editGame->setImage('img/' . $fileName);
+                        $gameUpdate->setImage('img/' . $fileName);
                     }
 
-                    try {
+                    // Il faut que je vérifie que le titre envoyé dans le formulaire n'est pas égal à un titre déjà existant dans la table Game
+                    $newTitle = $gameUpdate->getTitle();
+                    $existingGame = $gameRepository->findOneBy(['title' => $newTitle]);
 
-                        $entityManager->flush();
-                        $this->addFlash('succès', 'Le jeu a été modifié.');
+                    // On vérifie que le jeu existe déjà avec ce titre et on compare les ID pour vérifier que ce n'est pas le même jeu qu'on modifie
+                    // Si on ne met pas cette comparaison, il me dit que le titre existe déjà alors que je n'ai pas touché au titre
+                    if ($existingGame && $existingGame->getId() !== $gameUpdate->getGame()->getId()) {
 
-                        return $this->redirectToRoute('app_game_management', [
-                            'id' => $editGame->getId(),
-                        ]);
+                        $this->addFlash('erreur', 'Un jeu avec ce titre existe déjà.');
+                        return $this->redirectToRoute('app_game_management', ['editId' => $editId]);
 
-                    } catch (\Exception $exception) {
-                        $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
-                    } 
+                    } else {
+                        try {
+                            $statusPending = $statusRepository->findOneBy(["name" => "pending"]);
+                            $gameUpdate->setStatus($statusPending);
+                            $gameUpdate->setDateUpdated(new \DateTime('now'));
+
+                            $entityManager->persist($gameUpdate);
+                            $entityManager->flush();
+                            $this->addFlash('succès', 'Le jeu est en cours de modification.');
+                            return $this->redirectToRoute('app_game_management');
+
+                        } catch (\Exception $exception) {
+                            $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
+                        }
+                    }
+
                 } else {
                     $this->addFlash('erreur', 'Le formulaire est invalide.');
                 }
@@ -134,6 +182,7 @@ final class GameManagementController extends AbstractController
             // Quand tu es sur la page "Modifier", il envoie le formulaire d'édition et null pour l'ajout.
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'editId' => $editId,
+            'openNewGamePopup' => $openNewGamePopup,
         ]);
     }
 }

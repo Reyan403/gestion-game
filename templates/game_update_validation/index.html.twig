@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation des Jeux
+{% endblock %}
+
+{% block body %}
+	<section class="flex min-h-screen bg-[#181f2e] text-slate-200 font-sans">
+		{{ include('composants/sidebar.html.twig') }}
+
+		<main class="flex-1 p-8">
+			<div class="max-w-8xl mx-auto">
+				<h1 class="text-white text-2xl font-bold pb-6">Validation des jeux</h1>
+
+				<div class="flex flex-wrap gap-4 mb-10 mt-2">
+					<button id="pending-game-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors shadow focus:outline-none">
+						En attente ({{pendingGameUpdate|length}})
+					</button>
+				</div>
+
+				{# SECTION EN ATTENTE #}
+				<div id="pending-games" class="bg-slate-800/80 rounded-2xl p-6 md:p-8 shadow-xl border border-slate-700">
+					<p class="text-slate-300 mb-6 font-medium">{{pendingGameUpdate|length}}
+						jeu(x) en attente de validation</p>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+						{% for pgu in pendingGameUpdate %}
+							<div class="bg-slate-700/80 rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-600/50 transition duration-300 hover:shadow-2xl hover:border-slate-500">
+								<div class="h-100 w-full bg-black relative">
+									<img src="{{ pgu.getImage() }}" alt="{{ pgu.Title() }}" class="w-full h-full object-cover opacity-90"/>
+								</div>
+
+								<div class="p-6 flex-1 flex flex-col">
+									<div class="flex justify-between items-start mb-4">
+										<h2 class="text-xl font-bold text-white">{{ pgu.getTitle() }}</h2>
+										<div class="flex gap-2">			
+											<span class="bg-purple-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">Modification</span>
+											<span class="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">En attente</span>
+										</div>
+									</div>
+
+									<div class="flex flex-wrap gap-2 mb-4">
+										{% for pguc in pgu.getCategories %}
+											<span class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">{{ pguc.getName() }}</span>
+										{% endfor %}
+									</div>
+
+									<p class="text-slate-300 text-sm mb-6">
+										{{ pgu.getDescription() }}
+									</p>
+
+
+									<div class="text-[13px] text-slate-400 mb-4 flex items-center gap-3">
+										<div>
+											<p class="mb-0.5">Soumis par</p>
+
+											<p class="text-slate-200 font-medium leading-tight">
+												{{ pgu.getUser().getName() }}
+											</p>
+											<p class="text-slate-500 text-xs">
+												{{ pgu.getUser().getMail() }}
+											</p>
+										</div>
+									</div>
+
+									<div class="text-[13px] text-slate-400 mb-6">
+										<p class="mb-0.5">Date de soumission</p>
+                                        <p class="text-slate-200 font-medium">{{ pgu.getDateUpdated()|format_datetime(locale='fr', pattern="d MMMM YYYY") }}</p>
+									</div>
+
+									<form method="POST" action="{{ path('app_game_update_validation', {'id': pgu.id}) }}">
+										<div class="flex gap-3 mt-auto">
+											<button type="submit" name="game_update_validation[approve]" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+												</svg>
+												Approuver
+											</button>
+											<button type="submit" name="game_update_validation[refuse]" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+												</svg>
+												Refuser
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</main>
+		</section>
+{% endblock %}

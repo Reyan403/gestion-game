@@ -218,14 +218,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnEnAttente = document.getElementById('tab-pending');
     const btnArchive = document.getElementById('tab-archive');
 
-    if(btnArchive) {
+    if (btnArchive) {
         btnArchive.addEventListener('click', () => {
             contentArchive.classList.remove('hidden');
             contentEnAttente.classList.add('hidden');
         })
-    } 
+    }
 
-    if(btnEnAttente) {
+    if (btnEnAttente) {
         btnEnAttente.addEventListener('click', () => {
             contentArchive.classList.add('hidden');
             contentEnAttente.classList.remove('hidden');
@@ -254,4 +254,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+});
+
+
+// ═══════════════════ PAGE JEUX EN ATTENTE/ARCHIVE/APPROUVES ═══════════════════
+
+document.addEventListener('DOMContentLoaded', function () {
+    const pendingGame = document.getElementById('pending-games');
+    const archivedGame = document.getElementById('archived-games');
+    const approvedGame = document.getElementById('approved-games');
+
+    const btnPendingGame = document.getElementById('pending-game-btn');
+    const btnArchivedGame = document.getElementById('archived-game-btn');
+    const btnApprovedGame = document.getElementById('approved-game-btn');
+
+    if(btnPendingGame) {
+        btnPendingGame.addEventListener('click', () => {
+            pendingGame.classList.remove('hidden');
+            archivedGame.classList.add('hidden');
+            approvedGame.classList.add('hidden');
+        })
+    }
+
+    if(btnArchivedGame) {
+        btnArchivedGame.addEventListener('click', () => {
+            pendingGame.classList.add('hidden');
+            archivedGame.classList.remove('hidden');
+            approvedGame.classList.add('hidden');
+        })
+    }
+
+    if(btnApprovedGame) {
+        btnApprovedGame.addEventListener('click', () => {
+            approvedGame.classList.remove('hidden');
+            pendingGame.classList.add('hidden');
+            archivedGame.classList.add('hidden');
+        })
+    }
 });

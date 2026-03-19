@@ -62,6 +62,7 @@ class Right
     public function removeRole(Role $role): self 
     {
         $this->roles->removeElement($role);
+        
         return $this;
     }
 }

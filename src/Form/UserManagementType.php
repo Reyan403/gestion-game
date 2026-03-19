@@ -7,15 +7,13 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class UserType extends AbstractType
+class UserManagementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -43,24 +41,17 @@ class UserType extends AbstractType
                     )
                 ]
             ])
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Mot de passe actuel',
-                // On met mapped à false car ce champ n'est pas lié à l'entité User
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('newPassword', PasswordType::class, [
-                'label' => 'Nouveau mot de passe',
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('confirmPassword', PasswordType::class, [
-                'label' => 'Confirmer le mot de passe',
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer les modifications',
+            ->add('rolesEntities', EntityType::class, [
+                'class' => Role::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Rôle',
+                'constraints' => [
+                    new NotBlank (
+                        message: 'Veuillez entrer le rôle de l\'utilisateur.'
+                    )
+                ]
             ])
         ;
     }
