@@ -17,6 +17,7 @@ final class CommentModerationController extends AbstractController
     public function index(CommentaryRepository $commentaryRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         if ($this->getUser()) {
+
             $commentaryIsValidated = $commentaryRepository->findBy(
                 [
                     'isValidated' => false,
@@ -34,7 +35,7 @@ final class CommentModerationController extends AbstractController
             );
 
             // LES BOUTONS
-            // Cette ligne génère un URL en récupérant l'id du commentaire.
+            // Cette ligne génère un URL en récupérant l'id du commentaire. 
             $id = $request->query->get('id');
 
             $form = null;
@@ -43,11 +44,13 @@ final class CommentModerationController extends AbstractController
                 $commentary = $commentaryRepository->find($id);
 
                 if ($commentary) {
+
                     $form = $this->createForm(CommentModerationType::class, $commentary);
                     $form->handleRequest($request);
 
                     if ($form->isSubmitted()) {
                         if ($form->isValid()) {
+
                             // C'est pour faire comprendre à mon VSC que c'est un bouton
                             // Sinon il m'indique que isClicked() est une erreur car cette méthode est spécifique que pour les boutons
                             /** @var SubmitButton $buttonApprove */
@@ -63,15 +66,15 @@ final class CommentModerationController extends AbstractController
                                 $commentary->setIsValidated(true);
                                 $commentary->setIsArchived(false);
                                 $this->addFlash('succès', 'Le commentaire a été approuvé.');
-                            } elseif ($buttonArchive->isClicked()) {
+                            } else if ($buttonArchive->isClicked()) {
                                 $commentary->setIsValidated(false);
                                 $commentary->setIsArchived(true);
                                 $this->addFlash('warning', 'Le commentaire a été archivé.');
-                            } elseif ($buttonRestore->isClicked()) {
+                            } else if ($buttonRestore->isClicked()) {
                                 $commentary->setIsValidated(false);
                                 $commentary->setIsArchived(false);
                                 $this->addFlash('succès', 'Le commentaire a été restauré.');
-                            } elseif ($buttonRemove->isClicked()) {
+                            } else if ($buttonRemove->isClicked()) {
                                 $entityManager->remove($commentary);
                                 $this->addFlash('succès', 'Le commentaire a bien été supprimé.');
                             }
