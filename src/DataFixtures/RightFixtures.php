@@ -5,12 +5,12 @@ namespace App\DataFixtures;
 use App\Entity\Right;
 use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class RightFixtures extends Fixture implements DependentFixtureInterface
 {
-    public static function data(): array 
+    public static function data(): array
     {
         return [
             [
@@ -103,12 +103,12 @@ class RightFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $right = new Right();
             $right->setName(self::data()[$i]['name']);
 
             if (isset(self::data()[$i]['reference_role'])) {
-                for ($j = 0; $j < count(self::data()[$i]['reference_role']); $j++) {
+                for ($j = 0; $j < count(self::data()[$i]['reference_role']); ++$j) {
                     $right->addRole($this->getReference(self::data()[$i]['reference_role'][$j], Role::class));
                 }
             }
@@ -119,7 +119,7 @@ class RightFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
             RoleFixtures::class,

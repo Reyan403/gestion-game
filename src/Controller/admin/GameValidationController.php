@@ -33,30 +33,29 @@ final class GameValidationController extends AbstractController
             'isValidated' => true,
             'isArchived' => false,
         ],
-        [
-            'whenIsValidated' => 'DESC',
-        ]);
+            [
+                'whenIsValidated' => 'DESC',
+            ]);
 
         // BOUTONS
         $id = $request->query->get('id');
 
         $form = null;
 
-        if($id) {
+        if ($id) {
             $gameId = $gameRepository->find($id);
-             
-            if($gameId) {
 
+            if ($gameId) {
                 $form = $this->createForm(GameValidationType::class, $gameId);
                 $form->handleRequest($request);
 
-                if($form->isSubmitted()) {
-                    if($form->isValid()) {
+                if ($form->isSubmitted()) {
+                    if ($form->isValid()) {
                         // C'est pour faire comprendre à mon VSC que c'est un bouton
                         // Sinon il m'indique que isClicked() est une erreur car cette méthode est spécifique que pour les boutons
                         /** @var SubmitButton $buttonApprove */
-                        $buttonApprove = $form->get('approve');  
-                        /** @var SubmitButton $buttonArchive */ 
+                        $buttonApprove = $form->get('approve');
+                        /** @var SubmitButton $buttonArchive */
                         $buttonArchive = $form->get('archive');
                         /** @var SubmitButton $buttonRemove */
                         $buttonRemove = $form->get('remove');
@@ -69,18 +68,15 @@ final class GameValidationController extends AbstractController
                             $gameId->setIsValidatedBy($this->getUser());
                             $gameId->setWhenIsValidated(new \DateTime('now'));
                             $this->addFlash('succès', 'Le jeu a été approuvé.');
-
-                        } else if ($buttonArchive->isClicked()) {
+                        } elseif ($buttonArchive->isClicked()) {
                             $gameId->setIsValidated(false);
                             $gameId->setIsArchived(true);
                             $this->addFlash('warning', 'Le jeu a été archivé.');
-
-                        } else if ($buttonRestore->isClicked()) {
+                        } elseif ($buttonRestore->isClicked()) {
                             $gameId->setIsValidated(false);
                             $gameId->setIsArchived(false);
                             $this->addFlash('succès', 'Le jeu a été restauré.');
-
-                        } else if ($buttonRemove->isClicked()) {
+                        } elseif ($buttonRemove->isClicked()) {
                             $entityManager->remove($gameId);
                             $this->addFlash('succès', 'Le jeu a bien été supprimé.');
                         }
@@ -92,7 +88,6 @@ final class GameValidationController extends AbstractController
                 }
             }
         }
-        
 
         return $this->render('admin/game_validation/index.html.twig', [
             'pendingGame' => $pendingGame,

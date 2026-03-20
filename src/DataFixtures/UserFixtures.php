@@ -5,9 +5,9 @@ namespace App\DataFixtures;
 use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -25,7 +25,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $this->hasher = $hasher;
     }
 
-    public static function data(): array 
+    public static function data(): array
     {
         return [
             [
@@ -75,7 +75,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        for($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $user = new User();
             $user->setName(self::data()[$i]['name']);
             $user->setMail(self::data()[$i]['mail']);

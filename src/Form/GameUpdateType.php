@@ -23,16 +23,16 @@ class GameUpdateType extends AbstractType
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrerle titre du jeu.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('description', TextType::class, [
                 'label' => 'Description',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer la description du jeu.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('image', FileType::class, [
                 'label' => 'URL de l\'image',
@@ -42,7 +42,7 @@ class GameUpdateType extends AbstractType
                     new Image(
                         maxSize : '2M'
                     ),
-                ]
+                ],
             ])
             ->add('categories', EntityType::class, [
                 'class' => Category::class,
@@ -51,10 +51,10 @@ class GameUpdateType extends AbstractType
                 'expanded' => true,
                 'label' => 'Catégories',
                 'constraints' => [
-                    new NotBlank (
+                    new NotBlank(
                         message: 'Veuillez entrer les catégories de ce jeu.'
-                    )
-                ]
+                    ),
+                ],
             ])
         ;
     }

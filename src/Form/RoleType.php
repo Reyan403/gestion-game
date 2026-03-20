@@ -17,13 +17,13 @@ class RoleType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom du rôle',
                 'attr' => [
-                    'placeholder' => 'Entrez le nom du rôle'
+                    'placeholder' => 'Entrez le nom du rôle',
                 ],
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer le nom du rôle.'
-                    )
-                ]
+                    ),
+                ],
             ])
         ;
     }

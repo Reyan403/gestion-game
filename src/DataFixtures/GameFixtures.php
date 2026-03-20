@@ -21,146 +21,146 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
     public const OVERWATCH = 'overwatch';
     public const HOLLOW_KNIGHT = 'hollow-knight';
 
-    public static function data(): array 
+    public static function data(): array
     {
         return [
             [
                 'title' => 'The Legend of Zelda: Breath of the Wild',
                 'description' => 'Explorez le vaste royaume d’Hyrule en résolvant des énigmes, combattant des ennemis et découvrant des secrets cachés dans ce jeu d’aventure épique.',
                 'image' => 'img/zelda.jpg',
-                'createdAt'=> new \DateTime('2025-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2025-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
-                'whenIsValidated'=> new \DateTime('2026-03-16 16:20:00'),
+                'whenIsValidated' => new \DateTime('2026-03-16 16:20:00'),
                 'game' => self::ZELDA,
                 'reference_user' => UserFixtures::USER_3,
-                'reference_user_validated_by' => UserFixtures::USER_1, 
+                'reference_user_validated_by' => UserFixtures::USER_1,
                 'genres' => [
-                    CategoryFixtures::ACTION, 
-                    CategoryFixtures::AVENTURE, 
-                ]
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::AVENTURE,
+                ],
             ],
             [
                 'title' => 'Minecraft',
                 'description' => 'Créez, explorez et survivez dans un monde ouvert composé de blocs, où l’imagination est la seule limite.',
                 'image' => 'img/minecraft.jpg',
-                'createdAt'=> new \DateTime('2024-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2024-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
                 'game' => self::MINECRAFT,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
-                    CategoryFixtures::AVENTURE, 
-                ]
+                    CategoryFixtures::AVENTURE,
+                ],
             ],
             [
                 'title' => 'The Witcher 3: Wild Hunt',
                 'description' => 'Incarnez Geralt de Riv, chasseur de monstres, dans un RPG riche en quêtes, choix moraux et combats intenses dans un univers médiéval fantastique.',
                 'image' => 'img/the-witcher.webp',
-                'createdAt'=> new \DateTime('2023-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2023-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => true,
                 'game' => self::THE_WITCHER,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
-                    CategoryFixtures::RPG, 
-                    CategoryFixtures::AVENTURE, 
-                    CategoryFixtures::ACTION, 
-                ]
+                    CategoryFixtures::RPG,
+                    CategoryFixtures::AVENTURE,
+                    CategoryFixtures::ACTION,
+                ],
             ],
             [
                 'title' => 'Fortnite',
                 'description' => 'Participez à des batailles multijoueur intenses jusqu’au dernier survivant, construisez des structures et défiez vos amis dans des combats dynamiques.',
                 'image' => 'img/fortnite.jpg',
-                'createdAt'=> new \DateTime('2022-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2022-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
                 'game' => self::FORTNITE,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
-                    CategoryFixtures::ACTION, 
-                    CategoryFixtures::BATTLE_ROYALE, 
-                ]
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::BATTLE_ROYALE,
+                ],
             ],
             [
                 'title' => 'Cyberpunk 2077',
                 'description' => 'Plongez dans Night City, une métropole futuriste, et personnalisez votre personnage pour accomplir des missions dans un monde ouvert cyberpunk.',
                 'image' => 'img/Cyberpunk2077.webp',
-                'createdAt'=> new \DateTime('2021-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2021-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
                 'game' => self::CYBERPUNK,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
-                    CategoryFixtures::ACTION, 
-                    CategoryFixtures::RPG, 
-                    CategoryFixtures::FPS, 
-                ]
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::RPG,
+                    CategoryFixtures::FPS,
+                ],
             ],
             [
                 'title' => 'Resident Evil Village',
                 'description' => 'Plongez dans une horreur intense avec Ethan Winters qui doit survivre dans un village rempli de monstres et découvrir les secrets terrifiants de la famille Dimitrescu.',
                 'image' => 'img/resident-evil.jpg',
-                'createdAt'=> new \DateTime('2020-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2020-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => true,
                 'game' => self::RESIDENT_EVIL,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
-                    CategoryFixtures::HORREUR, 
-                ]
+                    CategoryFixtures::HORREUR,
+                ],
             ],
             [
                 'title' => 'Grand Theft Auto V (GTA V)',
                 'description' => 'Vivez une aventure criminelle à Los Santos, avec missions scénarisées, exploration libre et une multitude d’activités dans un monde ouvert vivant.',
                 'image' => 'img/GTA.avif',
-                'createdAt'=> new \DateTime('2019-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2019-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
-                'whenIsValidated'=> new \DateTime('2026-03-17 16:20:00'),
+                'whenIsValidated' => new \DateTime('2026-03-17 16:20:00'),
                 'game' => self::GTA,
                 'reference_user' => UserFixtures::USER_3,
                 'reference_user_validated_by' => UserFixtures::USER_1,
                 'genres' => [
-                    CategoryFixtures::ACTION, 
-                    CategoryFixtures::OPEN_WORLD, 
-                ]
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::OPEN_WORLD,
+                ],
             ],
             [
                 'title' => 'Overwatch',
                 'description' => 'Choisissez un héros aux compétences uniques et affrontez des équipes adverses dans des matchs rapides et tactiques.',
                 'image' => 'img/overwatch.jpg',
-                'createdAt'=> new \DateTime('2018-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2018-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
-                'whenIsValidated'=> new \DateTime('2026-03-18 16:20:00'),
-                'game' => self::OVERWATCH ,
+                'whenIsValidated' => new \DateTime('2026-03-18 16:20:00'),
+                'game' => self::OVERWATCH,
                 'reference_user' => UserFixtures::USER_1,
                 'reference_user_validated_by' => UserFixtures::USER_3,
                 'genres' => [
-                    CategoryFixtures::ACTION, 
-                    CategoryFixtures::FPS, 
-                ]
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::FPS,
+                ],
             ],
             [
                 'title' => 'Hollow Knight',
                 'description' => 'Explorez les sombres et mystérieux royaumes de Hallownest, combattez des ennemis redoutables et découvrez l’histoire cachée de ce monde en 2D.',
                 'image' => 'img/hollow-knight.jpg',
-                'createdAt'=> new \DateTime('2017-01-28 16:20:00'),
+                'createdAt' => new \DateTime('2017-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
                 'game' => self::HOLLOW_KNIGHT,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
-                    CategoryFixtures::AVENTURE, 
-                ]
+                    CategoryFixtures::AVENTURE,
+                ],
             ],
         ];
     }
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $game = new Game();
             $game->setTitle(self::data()[$i]['title']);
             $game->setDescription(self::data()[$i]['description']);
@@ -182,18 +182,18 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             }
 
             if (isset(self::data()[$i]['genres'])) {
-                for($j = 0; $j < count(self::data()[$i]['genres']); $j++) {
+                for ($j = 0; $j < count(self::data()[$i]['genres']); ++$j) {
                     $game->addCategory($this->getReference(self::data()[$i]['genres'][$j], Category::class));
                 }
             }
-            
+
             $manager->persist($game);
         }
 
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
             CategoryFixtures::class,

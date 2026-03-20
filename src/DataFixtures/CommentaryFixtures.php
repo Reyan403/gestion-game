@@ -6,12 +6,12 @@ use App\Entity\Commentary;
 use App\Entity\Game;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class CommentaryFixtures extends Fixture implements DependentFixtureInterface
 {
-    public static function data(): array 
+    public static function data(): array
     {
         return [
             [
@@ -67,7 +67,7 @@ class CommentaryFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $commentary = new Commentary();
             $commentary->setDescription(self::data()[$i]['description']);
             $commentary->setDate(self::data()[$i]['createdAt']);
@@ -82,7 +82,7 @@ class CommentaryFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
             GameFixtures::class,

@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils,): Response 
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils): Response
     {
         // Si l'utilisateur est déjà connecté, on le redirige vers l'accueil
         if ($this->getUser()) {
@@ -34,7 +34,7 @@ final class RegisterController extends AbstractController
 
             // Rôle attribué par défaut pour chaque compte inscrit
             $roleRepository = $entityManager->getRepository(Role::class);
-            $roleUser       = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+            $roleUser = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
 
             if ($roleUser) {
                 $user->addRole($roleUser);
@@ -48,9 +48,9 @@ final class RegisterController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'registrationForm' => $form,
-            'show_register'    => true,
-            'error'            => $authenticationUtils->getLastAuthenticationError(),
-            'last_username'    => $authenticationUtils->getLastUsername(),
+            'show_register' => true,
+            'error' => $authenticationUtils->getLastAuthenticationError(),
+            'last_username' => $authenticationUtils->getLastUsername(),
         ]);
     }
 

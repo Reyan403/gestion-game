@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentaryRepository;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentaryRepository::class)]
 class Commentary
@@ -27,12 +27,14 @@ class Commentary
     private \DateTime $createdAt;
 
     // ManyToOne: si une relation OneToMany et ManyToOne émerge, alors celui qui a la clef étrangère porte ManyToOne
+    // onDelete: 'CASCADE', sert à faire en sorte que si on supprimer, par exemple dans ce cas, un utilisateur, ça supprime toute la ligne où il contient l'id de cet utilisateur
+    // dans l'entité commentary, pour tout simplement éviter une erreur
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commentaries')]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $user;
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'commentaries')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Game $game;
 
     public function getId(): ?int
@@ -45,42 +47,42 @@ class Commentary
         return $this->description;
     }
 
-    public function setDescription(string $newDescription) : void 
+    public function setDescription(string $newDescription): void
     {
         $this->description = $newDescription;
     }
 
-    public function getGame(): Game 
+    public function getGame(): Game
     {
         return $this->game;
     }
 
-    public function getUser(): User 
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setGame(Game $game): void 
+    public function setGame(Game $game): void
     {
         $this->game = $game;
     }
 
-    public function setUser(User $user): void 
+    public function setUser(?User $user): void
     {
         $this->user = $user;
     }
 
-    public function getDate(): \DateTime 
+    public function getDate(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setDate(\DateTime $newDate): void 
+    public function setDate(\DateTime $newDate): void
     {
         $this->createdAt = $newDate;
     }
 
-    public function isValidated(): bool 
+    public function isValidated(): bool
     {
         return $this->isValidated;
     }
@@ -90,7 +92,7 @@ class Commentary
         $this->isValidated = $newIsValidated;
     }
 
-    public function isArchived(): bool 
+    public function isArchived(): bool
     {
         return $this->isArchived;
     }

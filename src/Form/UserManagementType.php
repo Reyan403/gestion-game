@@ -29,8 +29,8 @@ class UserManagementType extends AbstractType
                         min: 2,
                         minMessage: 'Votre nom doit contenir au moins {{ limit }} caractères',
                         max: 255,
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Email',
@@ -38,8 +38,8 @@ class UserManagementType extends AbstractType
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer une adresse mail',
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('rolesEntities', EntityType::class, [
                 'class' => Role::class,
@@ -48,10 +48,10 @@ class UserManagementType extends AbstractType
                 'expanded' => true,
                 'label' => 'Rôle',
                 'constraints' => [
-                    new NotBlank (
+                    new NotBlank(
                         message: 'Veuillez entrer le rôle de l\'utilisateur.'
-                    )
-                ]
+                    ),
+                ],
             ])
         ;
     }

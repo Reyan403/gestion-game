@@ -16,7 +16,7 @@ final class LoginController extends AbstractController
         // En cas d'échec, Symfony stocke l'erreur en session (failure_path: app_home dans security.yaml)
         return $this->redirectToRoute('app_home');
     }
-    
+
     // Appelée via {{ render(controller('App\\Controller\\LoginController::loginPopup')) }}
     // Cette fonction permet d'afficher les erreurs et le dernier nom utiliser par l'utilisateur
     // On ne le met dans la fonction login() car sinon pour chaque erreur du formulaire, ça nous renvois dans sur la page d'accueil au lieu de nous laisser sur le popup
@@ -24,7 +24,7 @@ final class LoginController extends AbstractController
     {
         return $this->render('login/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
-            'error'         => $authenticationUtils->getLastAuthenticationError(),
+            'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
     }
 

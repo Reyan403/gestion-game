@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\RoleRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 class Role
@@ -40,12 +40,12 @@ class Role
         return $this->id;
     }
 
-    public function getName() : string 
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $newName) : void 
+    public function setName(string $newName): void
     {
         $this->name = $newName;
     }
@@ -91,8 +91,8 @@ class Role
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            
-            $user->addRole($this); 
+
+            $user->addRole($this);
         }
 
         return $this;
@@ -107,4 +107,3 @@ class Role
         return $this;
     }
 }
-

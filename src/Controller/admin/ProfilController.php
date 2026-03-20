@@ -31,20 +31,18 @@ final class ProfilController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-
                 // get() est utilisé pour récupérer les données du formulaire
-                $plainPassword   = $form->get('plainPassword')->getData();
-                $newPassword     = $form->get('newPassword')->getData();
+                $plainPassword = $form->get('plainPassword')->getData();
+                $newPassword = $form->get('newPassword')->getData();
                 $confirmPassword = $form->get('confirmPassword')->getData();
 
-                // Je suis obligé de mettre cette variable : 
+                // Je suis obligé de mettre cette variable :
                 // Si je mets pas ça, pour chaque erreur commise dans la modification du profil
                 // Il y aura le message de succès et le message d'erreur
                 $hasErrors = false;
 
                 // On ne traite le mot de passe que si au moins un champ est rempli
                 if ($plainPassword || $newPassword || $confirmPassword) {
-
                     if (!$plainPassword || !$newPassword || !$confirmPassword) {
                         $this->addFlash('erreur', 'Veuillez remplir tous les champs nécessaires pour un changement de mot de passe.');
                         $hasErrors = true;
@@ -80,10 +78,8 @@ final class ProfilController extends AbstractController
                 return $this->redirectToRoute('profil_edit', [
                     'id' => $user->getId(),
                 ]);
-
-            } else {
-                $this->addFlash('erreur', 'Le formulaire est invalide.');
             }
+            $this->addFlash('erreur', 'Le formulaire est invalide.');
         }
 
         return $this->render('admin/profil/edit.html.twig', [
@@ -92,4 +88,3 @@ final class ProfilController extends AbstractController
         ]);
     }
 }
-

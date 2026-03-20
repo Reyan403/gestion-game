@@ -16,24 +16,23 @@ class StatusFixtures extends Fixture
     {
         return [
             [
-                "name" => "pending",
+                'name' => 'pending',
                 'reference_status' => self::PENDING,
             ],
             [
-                "name" => "accepted",
+                'name' => 'accepted',
                 'reference_status' => self::ACCEPTED,
             ],
             [
-                "name" => "refused",
+                'name' => 'refused',
                 'reference_status' => self::REFUSED,
             ],
         ];
-        
     }
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $status = new Status();
             $status->setName(self::data()[$i]['name']);
 

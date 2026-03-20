@@ -60,7 +60,7 @@ class Game
     #[ORM\OneToMany(targetEntity: GameUpdate::class, mappedBy: 'game')]
     private Collection $gamesUpdate;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->commentaries = new ArrayCollection();
         $this->categories = new ArrayCollection();
@@ -73,102 +73,102 @@ class Game
         return $this->id;
     }
 
-    public function getTitle() : string 
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getDescription() : string 
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setTitle(string $newTitle) : void 
+    public function setTitle(string $newTitle): void
     {
         $this->title = $newTitle;
     }
 
-    public function setDescription(string $newDescription) : void 
+    public function setDescription(string $newDescription): void
     {
         $this->description = $newDescription;
     }
 
-    public function getImage(): string 
+    public function getImage(): string
     {
         return $this->image;
     }
 
-    public function setImage(string $newImage): void 
+    public function setImage(string $newImage): void
     {
         $this->image = $newImage;
     }
 
-    public function isValidated(): bool 
+    public function isValidated(): bool
     {
         return $this->isValidated;
     }
 
-    public function setIsValidated(bool $newIsValidated): void 
+    public function setIsValidated(bool $newIsValidated): void
     {
         $this->isValidated = $newIsValidated;
     }
 
-    public function isArchived(): bool 
+    public function isArchived(): bool
     {
         return $this->isArchived;
     }
 
-    public function setIsArchived(bool $newIsArchived): void 
+    public function setIsArchived(bool $newIsArchived): void
     {
         $this->isArchived = $newIsArchived;
     }
 
-    public function getDateCreated(): \DateTime 
+    public function getDateCreated(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setDateCreated(\DateTime $newDateCreated): void 
+    public function setDateCreated(\DateTime $newDateCreated): void
     {
         $this->createdAt = $newDateCreated;
     }
 
-    public function getDateUpdated(): ?\DateTime 
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setDateUpdated(?\DateTime $newDateUpdated): void 
+    public function setDateUpdated(?\DateTime $newDateUpdated): void
     {
         $this->updatedAt = $newDateUpdated;
     }
 
-    public function getWhenIsValidated(): ?\DateTime 
+    public function getWhenIsValidated(): ?\DateTime
     {
         return $this->whenIsValidated;
     }
 
-    public function setWhenIsValidated(?\DateTime $newWhenIsValidated): void 
+    public function setWhenIsValidated(?\DateTime $newWhenIsValidated): void
     {
         $this->whenIsValidated = $newWhenIsValidated;
     }
 
-    public function getUser(): ?User 
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?User $newUser): void 
+    public function setUser(?User $newUser): void
     {
         $this->user = $newUser;
     }
 
-    public function getIsValidatedBy(): ?User 
+    public function getIsValidatedBy(): ?User
     {
         return $this->isValidatedBy;
     }
 
-    public function setIsValidatedBy(?User $newIsValidatedBy): void 
+    public function setIsValidatedBy(?User $newIsValidatedBy): void
     {
         $this->isValidatedBy = $newIsValidatedBy;
     }
@@ -194,7 +194,7 @@ class Game
         return $this->gamesUpdate;
     }
 
-    public function addCategory(Category $category): self 
+    public function addCategory(Category $category): self
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
@@ -203,7 +203,7 @@ class Game
         return $this;
     }
 
-    public function addCommentary(Commentary $commentary): self 
+    public function addCommentary(Commentary $commentary): self
     {
         if (!$this->commentaries->contains($commentary)) {
             $this->commentaries->add($commentary);
@@ -212,7 +212,7 @@ class Game
         return $this;
     }
 
-    public function addNote(Note $note): self 
+    public function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes->add($note);
@@ -221,7 +221,7 @@ class Game
         return $this;
     }
 
-    public function addGame(GameUpdate $gameUpdate): self 
+    public function addGame(GameUpdate $gameUpdate): self
     {
         if (!$this->gamesUpdate->contains($gameUpdate)) {
             $this->gamesUpdate->add($gameUpdate);
@@ -230,25 +230,29 @@ class Game
         return $this;
     }
 
-    public function removeCategory(Category $category) {
+    public function removeCategory(Category $category)
+    {
         $this->categories->removeElement($category);
 
         return $this;
     }
 
-    public function removeCommentary(Commentary $commentary) {
+    public function removeCommentary(Commentary $commentary)
+    {
         $this->commentaries->removeElement($commentary);
 
         return $this;
     }
 
-    public function removeNote(Note $note) {
+    public function removeNote(Note $note)
+    {
         $this->notes->removeElement($note);
 
         return $this;
     }
 
-    public function removeGame(GameUpdate $gameUpdate) {
+    public function removeGame(GameUpdate $gameUpdate)
+    {
         $this->gamesUpdate->removeElement($gameUpdate);
 
         return $this;

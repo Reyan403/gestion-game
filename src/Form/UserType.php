@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Role;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -31,8 +29,8 @@ class UserType extends AbstractType
                         min: 2,
                         minMessage: 'Votre nom doit contenir au moins {{ limit }} caractères',
                         max: 255,
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Email',
@@ -40,8 +38,8 @@ class UserType extends AbstractType
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer une adresse mail',
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Mot de passe actuel',

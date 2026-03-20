@@ -20,22 +20,20 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameController extends AbstractController
 {
     #[Route('/game/{id}', name: 'app_game')]
-    public function index(Game $game, GameRepository $gameRepository, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response 
+    public function index(Game $game, GameRepository $gameRepository, NoteRepository $noteRepository, CommentaryRepository $commentaryRepository, Request $request, EntityManagerInterface $entityManager, TwitchService $twitchService): Response
     {
-
-        // On vérifie si le jeu demandé est validé 
+        // On vérifie si le jeu demandé est validé
         if (!$game->isValidated()) {
             // Si ce n'est pas le cas, on affiche une erreur 404
             throw $this->createNotFoundException('Ce jeu n\'est pas disponible ou n\'a pas encore été validé.');
         }
-        
-        // GESTION DU VOTE VIA JAVASCRIPT 
+
+        // GESTION DU VOTE VIA JAVASCRIPT
         if ($request->isMethod('POST') && str_contains($request->headers->get('Content-Type'), 'application/json')) {
             $data = $request->toArray();
             $ratingValue = $data['rating'] ?? null;
 
-            if ($ratingValue !== null) {
-                
+            if (null !== $ratingValue) {
                 // On vérifie que l'utilisateur est bien connecté
                 $user = $this->getUser();
                 if (!$user) {
@@ -44,8 +42,8 @@ final class GameController extends AbstractController
 
                 // On cherche si l'utilisateur a déjà noté ce jeu
                 $note = $noteRepository->findOneBy([
-                    'game' => $game, 
-                    'user' => $user
+                    'game' => $game,
+                    'user' => $user,
                 ]);
 
                 // Si la note n'existe pas, on la crée
@@ -75,14 +73,14 @@ final class GameController extends AbstractController
 
         $average = $noteRepository->averageNoteForGame($game);
 
-        // On cherche si l'utilisateur connecté a déjà une note 
+        // On cherche si l'utilisateur connecté a déjà une note
         $userRating = null;
         if ($this->getUser()) {
             $existingNote = $noteRepository->findOneBy([
-                'game' => $game, 
-                'user' => $this->getUser()
+                'game' => $game,
+                'user' => $this->getUser(),
             ]);
-            
+
             if ($existingNote) {
                 $userRating = $existingNote->getNoteGame(); // On récupère sa note (1 à 5)
             }
@@ -91,21 +89,18 @@ final class GameController extends AbstractController
         // --------------------------- AFFICHE LE NOMBRE DE NOTES TOTAL ATTRIBUE POUR LE JEU ------------------------------
 
         $totalNotes = $noteRepository->findBy([
-            'game' => $game
+            'game' => $game,
         ]);
 
         // -------------------------- FORMULAIRE POUR ENTRER UN COMMENTAIRE ----------------------
-        
+
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
         $form->handleRequest($request);
 
-        if($form->isSubmitted()) {
-            if($form->isValid()) {
-
-
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
                 try {
-
                     $commentary->setDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
 
                     // Permet de lier le commentaire au jeu actuel
@@ -131,7 +126,6 @@ final class GameController extends AbstractController
                     return $this->redirectToRoute('app_game', [
                         'id' => $game->getId(),
                     ]);
-
                 } catch (\Exception $exception) {
                     $this->addFlash('erreur', 'Un problème est survenu. Veuillez réessayer.');
                 }
@@ -174,9 +168,9 @@ final class GameController extends AbstractController
             'commentaryList' => $commentaryList,
             'average' => $average,
             'form' => $form,
-            'userRating' => $userRating, 
+            'userRating' => $userRating,
             'totalNotes' => $totalNotes,
-            'streams' => $streams
+            'streams' => $streams,
         ]);
     }
 }

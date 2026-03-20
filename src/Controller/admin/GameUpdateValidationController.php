@@ -19,29 +19,28 @@ final class GameUpdateValidationController extends AbstractController
     {
         $pendingGameUpdate = $gameUpdateRepository->findPendingGameUpdate();
 
-        // BOUTONS 
+        // BOUTONS
 
         $id = $request->query->get('id');
 
-        $form= null;
+        $form = null;
 
-        if($id) {
-           $gameUpdateId = $gameUpdateRepository->find($id);
-           
-           if($gameUpdateId) {
+        if ($id) {
+            $gameUpdateId = $gameUpdateRepository->find($id);
+
+            if ($gameUpdateId) {
                 $form = $this->createForm(GameUpdateValidationType::class, $gameUpdateId);
                 $form->handleRequest($request);
 
-                if($form->isSubmitted()) {
-                    if($form->isValid()) {
+                if ($form->isSubmitted()) {
+                    if ($form->isValid()) {
+                        /** @var SubmitButton $buttonApprove */
+                        $buttonApprove = $form->get('approve');
+                        /** @var SubmitButton $buttonRefuse */
+                        $buttonRefuse = $form->get('refuse');
 
-                       /** @var SubmitButton $buttonApprove */
-                        $buttonApprove = $form->get('approve');  
-                        /** @var SubmitButton $buttonRefuse */ 
-                        $buttonRefuse = $form->get('refuse'); 
-
-                        if($buttonApprove->isClicked()) {
-                            $statusApprove = $statusRepository->findOneBy(["name" => "accepted"]);
+                        if ($buttonApprove->isClicked()) {
+                            $statusApprove = $statusRepository->findOneBy(['name' => 'accepted']);
                             $gameUpdateId->setStatus($statusApprove);
 
                             $game = $gameUpdateId->getGame();
@@ -55,8 +54,8 @@ final class GameUpdateValidationController extends AbstractController
                             }
 
                             $this->addFlash('succès', 'La modification de ce jeu a été accepté.');
-                        } else if ($buttonRefuse->isClicked()) {
-                            $statusRefuse = $statusRepository->findOneBy(["name" => "refused"]);
+                        } elseif ($buttonRefuse->isClicked()) {
+                            $statusRefuse = $statusRepository->findOneBy(['name' => 'refused']);
                             $gameUpdateId->setStatus($statusRefuse);
                             $this->addFlash('succès', 'La modification de ce jeu a été refusé.');
                         }
@@ -66,7 +65,7 @@ final class GameUpdateValidationController extends AbstractController
                         return $this->redirectToRoute('app_game_update_validation');
                     }
                 }
-           }
+            }
         }
 
         return $this->render('game_update_validation/index.html.twig', [

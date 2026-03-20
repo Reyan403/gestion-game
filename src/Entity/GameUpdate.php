@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: GameUpdateRepository::class)]
 class GameUpdate
 {
-     #[ORM\Id]
+    #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
@@ -41,7 +41,7 @@ class GameUpdate
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'gamesUpdate')]
     private Collection $categoriesUpdate;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->categoriesUpdate = new ArrayCollection();
     }
@@ -51,52 +51,52 @@ class GameUpdate
         return $this->id;
     }
 
-    public function getTitle() : string 
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getDescription() : string 
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setTitle(string $newTitle) : void 
+    public function setTitle(string $newTitle): void
     {
         $this->title = $newTitle;
     }
 
-    public function setDescription(string $newDescription) : void 
+    public function setDescription(string $newDescription): void
     {
         $this->description = $newDescription;
     }
 
-    public function getImage(): string 
+    public function getImage(): string
     {
         return $this->image;
     }
 
-    public function setImage(string $newImage): void 
+    public function setImage(string $newImage): void
     {
         $this->image = $newImage;
     }
 
-    public function getDateUpdated(): ?\DateTime 
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setDateUpdated(?\DateTime $newDateUpdated): void 
+    public function setDateUpdated(?\DateTime $newDateUpdated): void
     {
         $this->updatedAt = $newDateUpdated;
     }
 
-    public function getUser(): ?User 
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?User $newUser): void 
+    public function setUser(?User $newUser): void
     {
         $this->user = $newUser;
     }
@@ -105,17 +105,18 @@ class GameUpdate
     {
         return $this->game;
     }
+
     public function setGame(Game $game): void
     {
         $this->game = $game;
     }
 
-    public function getStatus(): Status 
+    public function getStatus(): Status
     {
         return $this->status;
     }
 
-    public function setStatus(Status $newStatus): void 
+    public function setStatus(Status $newStatus): void
     {
         $this->status = $newStatus;
     }
@@ -126,7 +127,7 @@ class GameUpdate
         return $this->categoriesUpdate;
     }
 
-    public function addCategory(Category $category): self 
+    public function addCategory(Category $category): self
     {
         if (!$this->categoriesUpdate->contains($category)) {
             $this->categoriesUpdate->add($category);
@@ -135,7 +136,8 @@ class GameUpdate
         return $this;
     }
 
-    public function removeCategory(Category $category) {
+    public function removeCategory(Category $category)
+    {
         $this->categoriesUpdate->removeElement($category);
 
         return $this;

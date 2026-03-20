@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -27,7 +27,7 @@ class Category
     #[ORM\ManyToMany(targetEntity: GameUpdate::class, mappedBy: 'categoriesUpdate')]
     private Collection $gamesUpdate;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->games = new ArrayCollection();
         $this->gamesUpdate = new ArrayCollection();
@@ -38,22 +38,22 @@ class Category
         return $this->id;
     }
 
-    public function getName() : string 
+    public function getName(): string
     {
         return $this->name;
-    } 
+    }
 
-    public function setName(string $newName) : void 
+    public function setName(string $newName): void
     {
         $this->name = $newName;
     }
 
-    public function getTwitchGameId(): string 
+    public function getTwitchGameId(): string
     {
         return $this->twitchGameId;
     }
 
-    public function setTwitchGameId(string $newTwitchGameId): void 
+    public function setTwitchGameId(string $newTwitchGameId): void
     {
         $this->twitchGameId = $newTwitchGameId;
     }

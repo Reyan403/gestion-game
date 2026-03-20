@@ -2,16 +2,17 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Note;
 use App\Entity\Game;
+use App\Entity\Note;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class NoteFixtures extends Fixture implements DependentFixtureInterface
 {
-    public static function data(): array {
+    public static function data(): array
+    {
         return [
             [
                 'note_game' => 4,
@@ -63,9 +64,9 @@ class NoteFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < count(self::data()); $i++) {
+        for ($i = 0; $i < count(self::data()); ++$i) {
             $note = new Note();
-            $note->setNoteGame(self::data()[$i]['note_game']);  
+            $note->setNoteGame(self::data()[$i]['note_game']);
             $note->setGame($this->getReference(self::data()[$i]['game'], Game::class));
             $note->setUser($this->getReference(self::data()[$i]['reference_user'], User::class));
 
@@ -75,7 +76,7 @@ class NoteFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,

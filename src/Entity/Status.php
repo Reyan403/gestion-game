@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\StatusRepository;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StatusRepository::class)]
 class Status
@@ -21,7 +21,7 @@ class Status
     #[ORM\OneToMany(targetEntity: GameUpdate::class, mappedBy: 'status')]
     private Collection $gamesUpdate;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->gamesUpdate = new ArrayCollection();
     }
@@ -31,12 +31,12 @@ class Status
         return $this->id;
     }
 
-    public function getName(): string 
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $newName): void 
+    public function setName(string $newName): void
     {
         $this->name = $newName;
     }
@@ -46,7 +46,7 @@ class Status
         return $this->gamesUpdate;
     }
 
-    public function addCategory(GameUpdate $gameUpdate): self 
+    public function addCategory(GameUpdate $gameUpdate): self
     {
         if (!$this->gamesUpdate->contains($gameUpdate)) {
             $this->gamesUpdate->add($gameUpdate);
@@ -55,7 +55,8 @@ class Status
         return $this;
     }
 
-    public function removeNote(GameUpdate $gameUpdate) {
+    public function removeNote(GameUpdate $gameUpdate)
+    {
         $this->gamesUpdate->removeElement($gameUpdate);
 
         return $this;

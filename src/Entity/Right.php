@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\RightRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RightRepository::class)]
 #[ORM\Table(name: '`right`')]
@@ -22,7 +22,7 @@ class Right
     #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'rights')]
     private Collection $roles;
 
-     public function __construct()
+    public function __construct()
     {
         $this->roles = new ArrayCollection();
     }
@@ -32,23 +32,22 @@ class Right
         return $this->id;
     }
 
-    public function getName() : string 
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $newName) : void 
+    public function setName(string $newName): void
     {
         $this->name = $newName;
-
     }
 
-    public function getRoles() : Collection 
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function addRole(Role $role): self 
+    public function addRole(Role $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -59,10 +58,10 @@ class Right
         return $this;
     }
 
-    public function removeRole(Role $role): self 
+    public function removeRole(Role $role): self
     {
         $this->roles->removeElement($role);
-        
+
         return $this;
     }
 }

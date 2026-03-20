@@ -10,12 +10,12 @@ class Note
 {
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'notes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Game $game = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column]
@@ -41,12 +41,12 @@ class Note
         $this->note_game = $newNoteGame;
     }
 
-    public function setGame(?Game $game): void 
+    public function setGame(?Game $game): void
     {
         $this->game = $game;
     }
 
-    public function setUser(?User $user): void 
+    public function setUser(?User $user): void
     {
         $this->user = $user;
     }

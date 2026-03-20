@@ -22,11 +22,11 @@ class CommentaryType extends AbstractType
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer un commentaire avant de publier.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Publier le commentaire",
+                'label' => 'Publier le commentaire',
             ])
         ;
     }
