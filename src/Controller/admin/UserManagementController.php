@@ -18,7 +18,7 @@ final class UserManagementController extends AbstractController
 {
     #[Route('/user_management', name: 'app_user_management')]
     public function index(UserRepository $userRepository, CommentaryRepository $commentaryRepository, NoteRepository $noteRepository,
-        GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager): Response
+     GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $users = $userRepository->findAll();
 
@@ -27,34 +27,38 @@ final class UserManagementController extends AbstractController
         $deleteId = $request->query->get('deleteId');
         $editId = $request->query->get('editId');
 
-        if ($editId) {
+         if ($editId) {
             $userId = $userRepository->find($editId);
 
             $formEdit = $this->createForm(UserManagementType::class, $userId);
             $formEdit->handleRequest($request);
 
-            if ($formEdit->isSubmitted()) {
-                if ($formEdit->isValid()) {
+            if($formEdit->isSubmitted()) {
+                if($formEdit->isValid()) {
                     try {
+
                         $entityManager->flush();
                         $this->addFlash('succès', 'L\'utilisateur a bien été modifié.');
 
                         return $this->redirectToRoute('app_user_management', [
                             'id' => $userId->getId(),
                         ]);
+
                     } catch (\Exception $exception) {
                         $this->addFlash('erreur', 'Un problème est survenu. Veuillez réessayer.');
                     }
                 } else {
                     $this->addFlash('erreur', 'Le formulaire est invalide.');
-                }
+                } 
             }
         }
 
-        if ($deleteId) {
+        if($deleteId) {
             $userToDelete = $userRepository->find($deleteId);
 
             try {
+                // Cela va permettre que, lorsqu'on supprime un utilisateur, ça va attribuer les colonnes "user_id" en null
+                // Pour conserver l'historique, s'ils ont ajouter ou modifier un jeu ou pas
                 $userGames = $gameRepository->findBy(['user' => $userToDelete]);
                 $userValidatedGames = $gameRepository->findBy(['isValidatedBy' => $userToDelete]);
                 $userGameUpdates = $gameUpdateRepository->findBy(['user' => $userToDelete]);
@@ -70,7 +74,7 @@ final class UserManagementController extends AbstractController
                 foreach ($userGameUpdates as $gameUpdate) {
                     $gameUpdate->setUser(null);
                 }
-
+                
                 $entityManager->remove($userToDelete);
                 $entityManager->flush();
 
