@@ -19,8 +19,9 @@ final class GameUpdateValidationController extends AbstractController
     {
         $pendingGameUpdate = $gameUpdateRepository->findPendingGameUpdate();
 
-        // BOUTONS
+        // LES BOUTONS
 
+        // Chercher l'id dans l'URL
         $id = $request->query->get('id');
 
         $form = null;
