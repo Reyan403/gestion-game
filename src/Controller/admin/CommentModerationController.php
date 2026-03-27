@@ -4,6 +4,7 @@ namespace App\Controller\admin;
 
 use App\Form\CommentModerationType;
 use App\Repository\CommentaryRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
@@ -16,6 +17,14 @@ final class CommentModerationController extends AbstractController
     #[Route('/comment_moderation', name: 'app_comment_moderation')]
     public function index(CommentaryRepository $commentaryRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
+        // Vérifie si l'utilisateur est connecté, sinon on le redirige vers l'accueil avec le popup de login
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+
+        // Vérifie si l'utilisateur a le droit de modérer les commentaires
+        $this->denyAccessUnlessGranted(RightVoter::COMMENT_VALIDATE);
 
         $commentaryIsValidated = $commentaryRepository->findBy(
             [

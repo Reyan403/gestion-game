@@ -6,10 +6,8 @@ use App\Entity\Game;
 use App\Entity\GameUpdate;
 use App\Form\GameType;
 use App\Form\GameUpdateType;
-use App\Repository\CommentaryRepository;
 use App\Repository\GameRepository;
-use App\Repository\GameUpdateRepository;
-use App\Repository\StatusRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -20,9 +18,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameManagementController extends AbstractController
 {
     #[Route('/game_management', name: 'app_game_management')]
-    public function index(GameRepository $gameRepository, CommentaryRepository $commentaryRepository, GameUpdateRepository $gameUpdateRepository, StatusRepository $statusRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir): Response
+    public function index(GameRepository $gameRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir): Response
     {
-        $game = $gameRepository->findJeuxApprouvesSansModifEnAttente();
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+
+        if (!$this->isGranted(RightVoter::GAME_CREATE) && !$this->isGranted(RightVoter::GAME_EDIT) && !$this->isGranted(RightVoter::GAME_VALIDATE) && !$this->isGranted(RightVoter::GAME_DELETE)) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires.');
+        }
+        
+        if($this->isGranted(RightVoter::GAME_VALIDATE)) {
+            $gamesDisplayed = $gameRepository->findBy([
+                'isValidated' => true,
+                'isArchived' => false,
+                'pendingChange' => false,
+            ]);
+        } else if ($this->isGranted(RightVoter::GAME_CREATE) || $this->isGranted(RightVoter::GAME_EDIT) || $this->isGranted(RightVoter::GAME_DELETE)) {
+            $gamesDisplayed = $gameRepository->findBy([
+                'user' => $this->getUser(),
+                'isValidated' => true,
+                'isArchived' => false,
+                'pendingChange' => false,
+            ]);
+        }
 
         // On va chercher l'id du jeu dans l'URL
         $editId = $request->query->get('editId');
@@ -32,7 +52,8 @@ final class GameManagementController extends AbstractController
         $formNew = null;
         $openNewGamePopup = false;
 
-        if (!$editId) {
+        if (!$editId && $this->isGranted(RightVoter::GAME_CREATE)) {
+            
             $newGame = new Game();
             $formNew = $this->createForm(GameType::class, $newGame);
             $formNew->handleRequest($request);
@@ -78,8 +99,17 @@ final class GameManagementController extends AbstractController
                 }
             }
         } elseif ($editId) {
+
+            $this->denyAccessUnlessGranted(RightVoter::GAME_EDIT);
+
             // On vérifie que l'id de ce jeu existe déjà
             $editGame = $gameRepository->find($editId);
+
+            if (!$editGame) {
+                $this->addFlash('erreur', 'Le jeu demandé n\'existe pas.');
+                return $this->redirectToRoute('app_game_management');
+                // Ou tu peux utiliser : throw $this->createNotFoundException('Jeu introuvable');
+            }
 
             $gameUpdate = new GameUpdate();
             $gameUpdate->setGame($editGame);
@@ -118,9 +148,8 @@ final class GameManagementController extends AbstractController
                         return $this->redirectToRoute('app_game_management', ['editId' => $editId]);
                     }
                     try {
-                        $statusPending = $statusRepository->findOneBy(['name' => 'pending']);
-                        $gameUpdate->setStatus($statusPending);
                         $gameUpdate->setDateUpdated(new \DateTime('now'));
+                        $editGame->setPendingChange(true);
 
                         $entityManager->persist($gameUpdate);
                         $entityManager->flush();
@@ -128,7 +157,7 @@ final class GameManagementController extends AbstractController
 
                         return $this->redirectToRoute('app_game_management');
                     } catch (\Exception $exception) {
-                        $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
+                        $this->addFlash('erreur', 'Une erreur est survenue.' . $exception->getMessage());
                     }
                 } else {
                     $this->addFlash('erreur', 'Le formulaire est invalide.');
@@ -137,6 +166,9 @@ final class GameManagementController extends AbstractController
         }
 
         if ($deleteId) {
+
+            $this->denyAccessUnlessGranted(RightVoter::GAME_DELETE);
+
             $gameToDelete = $gameRepository->find($deleteId);
 
             try {
@@ -159,14 +191,14 @@ final class GameManagementController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('succès', 'Le jeu a été supprimé.');
             } catch (\Exception $exception) {
-                $this->addFlash('succès', 'Une erreur est survenue. Veuillez réessayer.');
+                $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
             }
 
             return $this->redirectToRoute('app_game_management');
         }
 
         return $this->render('admin/game_management/index.html.twig', [
-            'game' => $game,
+            'game' => $gamesDisplayed,
             // Quand tu es sur la page "Ajouter", il envoie le formulaire d'ajout et null pour l'édition.
             'formNew' => $formNew ? $formNew->createView() : null,
             // Quand tu es sur la page "Modifier", il envoie le formulaire d'édition et null pour l'ajout.

@@ -4,6 +4,7 @@ namespace App\Controller\admin;
 
 use App\Form\GameValidationType;
 use App\Repository\GameRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
@@ -16,6 +17,13 @@ final class GameValidationController extends AbstractController
     #[Route('/game_validation', name: 'app_game_validation')]
     public function index(GameRepository $gameRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+
+        $this->denyAccessUnlessGranted(RightVoter::GAME_VALIDATE);
+        
         // Afficher les jeux en attente
         $pendingGame = $gameRepository->findby([
             'isValidated' => false,

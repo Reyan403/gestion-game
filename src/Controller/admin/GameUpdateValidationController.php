@@ -4,7 +4,7 @@ namespace App\Controller\admin;
 
 use App\Form\GameUpdateValidationType;
 use App\Repository\GameUpdateRepository;
-use App\Repository\StatusRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
@@ -15,9 +15,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GameUpdateValidationController extends AbstractController
 {
     #[Route('/game_update_validation', name: 'app_game_update_validation')]
-    public function index(GameUpdateRepository $gameUpdateRepository, StatusRepository $statusRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $pendingGameUpdate = $gameUpdateRepository->findPendingGameUpdate();
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+
+        $this->denyAccessUnlessGranted(RightVoter::GAME_VALIDATE);
+        
+        $pendingGameUpdate = $gameUpdateRepository->findAll();
 
         // LES BOUTONS
 
@@ -30,6 +37,9 @@ final class GameUpdateValidationController extends AbstractController
             $gameUpdateId = $gameUpdateRepository->find($id);
 
             if ($gameUpdateId) {
+                // On récupère le Game associé via la relation dans GameUpdate
+                $game = $gameUpdateId->getGame();
+
                 $form = $this->createForm(GameUpdateValidationType::class, $gameUpdateId);
                 $form->handleRequest($request);
 
@@ -41,24 +51,27 @@ final class GameUpdateValidationController extends AbstractController
                         $buttonRefuse = $form->get('refuse');
 
                         if ($buttonApprove->isClicked()) {
-                            $statusApprove = $statusRepository->findOneBy(['name' => 'accepted']);
-                            $gameUpdateId->setStatus($statusApprove);
-
-                            $game = $gameUpdateId->getGame();
-
+                            // On copie les données du GameUpdate vers le Game
                             $game->setTitle($gameUpdateId->getTitle());
                             $game->setDescription($gameUpdateId->getDescription());
                             $game->setImage($gameUpdateId->getImage());
+                            $game->setPendingChange(false);
 
+                            // On synchronise les catégories : on retire les anciennes et on ajoute celles du GameUpdate
+                            foreach ($game->getCategories() as $category) {
+                                $game->removeCategory($category);
+                            }
                             foreach ($gameUpdateId->getCategories() as $category) {
                                 $game->addCategory($category);
                             }
 
-                            $this->addFlash('succès', 'La modification de ce jeu a été accepté.');
+                            $entityManager->remove($gameUpdateId);
+
+                            $this->addFlash('succès', 'La modification de ce jeu a été acceptée.');
                         } elseif ($buttonRefuse->isClicked()) {
-                            $statusRefuse = $statusRepository->findOneBy(['name' => 'refused']);
-                            $gameUpdateId->setStatus($statusRefuse);
-                            $this->addFlash('succès', 'La modification de ce jeu a été refusé.');
+                            $game->setPendingChange(false);
+                            $entityManager->remove($gameUpdateId);
+                            $this->addFlash('warning', 'La modification de ce jeu a été refusée.');
                         }
 
                         $entityManager->flush();

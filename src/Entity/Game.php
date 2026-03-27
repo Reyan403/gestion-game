@@ -40,6 +40,9 @@ class Game
     #[ORM\Column]
     private bool $isArchived;
 
+    #[ORM\Column] 
+    private bool $pendingChange;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
@@ -121,6 +124,16 @@ class Game
     public function setIsArchived(bool $newIsArchived): void
     {
         $this->isArchived = $newIsArchived;
+    }
+
+    public function getPendingChange(): bool
+    {
+        return $this->pendingChange;
+    }
+
+    public function setPendingChange(bool $newPendingChange): void
+    {
+        $this->pendingChange = $newPendingChange;
     }
 
     public function getDateCreated(): \DateTime

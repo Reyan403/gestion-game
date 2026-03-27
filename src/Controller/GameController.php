@@ -9,6 +9,7 @@ use App\Form\CommentaryType;
 use App\Repository\CommentaryRepository;
 use App\Repository\GameRepository;
 use App\Repository\NoteRepository;
+use App\Security\RightVoter;
 use App\Service\TwitchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,6 +101,11 @@ final class GameController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+
+                if(!$this->denyAccessUnlessGranted(RightVoter::COMMENT_CREATE)) {
+                    throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires pour envoyer un commentaire');
+                }
+
                 try {
                     $commentary->setDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
 
@@ -160,6 +166,8 @@ final class GameController extends AbstractController
         $streams = [];
         if (!empty($allTwitchIds)) {
             // Recupère tous les lives
+            // array_unique($allTwitchIds) : Avant d'envoyer les identifiants, on utilise cette fonction PHP pour supprimer les éventuels doublons. 
+            // Si deux catégories différentes pointaient vers le même ID Twitch, on ne veut pas demander la même chose deux fois à l'API.
             $streams = $twitchService->getStreamsByGameIds(array_unique($allTwitchIds));
         }
 

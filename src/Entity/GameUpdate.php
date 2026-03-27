@@ -35,9 +35,6 @@ class GameUpdate
     #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'gamesUpdate')]
     private Game $game;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'gamesUpdate')]
-    private Status $status;
-
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'gamesUpdate')]
     private Collection $categoriesUpdate;
 
@@ -109,16 +106,6 @@ class GameUpdate
     public function setGame(Game $game): void
     {
         $this->game = $game;
-    }
-
-    public function getStatus(): Status
-    {
-        return $this->status;
-    }
-
-    public function setStatus(Status $newStatus): void
-    {
-        $this->status = $newStatus;
     }
 
     // Méthodes des collection

@@ -16,17 +16,6 @@ class GameUpdateRepository extends ServiceEntityRepository
         parent::__construct($registry, GameUpdate::class);
     }
 
-    public function findPendingGameUpdate()
-    {
-        return $this->createQueryBuilder('gu')
-            ->join('gu.status', 's')
-            ->addSelect('s')
-            ->andWhere('s.name = :name')
-            ->setParameter('name', 'pending')
-            ->getQuery()
-            ->getResult();
-    }
-
     //    /**
     //     * @return GameUpdate[] Returns an array of GameUpdate objects
     //     */

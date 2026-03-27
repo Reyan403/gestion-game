@@ -3,11 +3,10 @@
 namespace App\Controller\admin;
 
 use App\Form\UserManagementType;
-use App\Repository\CommentaryRepository;
 use App\Repository\GameRepository;
 use App\Repository\GameUpdateRepository;
-use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +16,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserManagementController extends AbstractController
 {
     #[Route('/user_management', name: 'app_user_management')]
-    public function index(UserRepository $userRepository, CommentaryRepository $commentaryRepository, NoteRepository $noteRepository,
-     GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(UserRepository $userRepository,GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, 
+    Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+
+        $this->denyAccessUnlessGranted(RightVoter::ROLE_VIEW);
+
         $users = $userRepository->findAll();
 
         $formEdit = null;
@@ -28,6 +34,8 @@ final class UserManagementController extends AbstractController
         $editId = $request->query->get('editId');
 
          if ($editId) {
+            $this->denyAccessUnlessGranted(RightVoter::ROLE_ASSIGN);
+
             $userId = $userRepository->find($editId);
 
             $formEdit = $this->createForm(UserManagementType::class, $userId);
@@ -54,10 +62,12 @@ final class UserManagementController extends AbstractController
         }
 
         if($deleteId) {
+            $this->denyAccessUnlessGranted(RightVoter::USER_DELETE);
+            
             $userToDelete = $userRepository->find($deleteId);
 
             try {
-                // Cela va permettre que, lorsqu'on supprime un utilisateur, ça va attribuer les colonnes "user_id" en null
+                // Cela va permettre, lorsqu'on supprime un utilisateur, d'attribuer les colonnes "user_id" en null
                 // Pour conserver l'historique, s'ils ont ajouter ou modifier un jeu ou pas
                 $userGames = $gameRepository->findBy(['user' => $userToDelete]);
                 $userValidatedGames = $gameRepository->findBy(['isValidatedBy' => $userToDelete]);

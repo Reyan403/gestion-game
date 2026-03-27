@@ -15,7 +15,7 @@ class Note
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notes')]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\Column]

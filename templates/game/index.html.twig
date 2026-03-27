@@ -162,29 +162,31 @@
 						)</h2>
 
 
-					<h3 class="text-lg font-bold text-white mb-3">Laisser un commentaire</h3>
+					{% if is_granted('Créer un commentaire') %}
+						<h3 class="text-lg font-bold text-white mb-3">Laisser un commentaire</h3>
 
-					<div class="mb-6">
-						<label class="block text-base font-semibold text-gray-300 mb-3">Votre commentaire</label>
-						{{ form_start(form) }}
-						{{ form_widget(form.description, {
-                                'attr': {
-                                    'class': 'w-full bg-[#2d3748] border border-gray-600 rounded-lg p-4 text-base text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y min-h-[140px]',
-                                    'placeholder': 'Partagez votre expérience avec ce jeu...'
-                                }
-                            }) }}
-						{{ form_errors(form.description) }}
+						<div class="mb-6">
+							<label class="block text-base font-semibold text-gray-300 mb-3">Votre commentaire</label>
+							{{ form_start(form) }}
+							{{ form_widget(form.description, {
+									'attr': {
+										'class': 'w-full bg-[#2d3748] border border-gray-600 rounded-lg p-4 text-base text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y min-h-[140px]',
+										'placeholder': 'Partagez votre expérience avec ce jeu...'
+									}
+								}) }}
+							{{ form_errors(form.description) }}
 
-						<div class="mt-6">
-							{{ form_widget(form.submit, {
-                                    'attr': {
-                                        'class': 'bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base py-3 px-8 rounded-lg transition-colors cursor-pointer border-none shadow-sm'
-                                    }
-                                }) }}
+							<div class="mt-6">
+								{{ form_widget(form.submit, {
+										'attr': {
+											'class': 'bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base py-3 px-8 rounded-lg transition-colors cursor-pointer border-none shadow-sm'
+										}
+									}) }}
+							</div>
+							{{ form_end(form) }}
 						</div>
-						{{ form_end(form) }}
 					</div>
-				</div>
+				{% endif %}
 
 				<hr class="border-gray-700 my-6">
 

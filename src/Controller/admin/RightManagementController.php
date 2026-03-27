@@ -16,6 +16,11 @@ final class RightManagementController extends AbstractController
     #[Route('/right_management', name: 'app_right_management')]
     public function index(RightRepository $rightRepository, RoleRepository $roleRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
+        }
+        
         $rights = $rightRepository->findAll();
         $roles = $roleRepository->findAll();
 

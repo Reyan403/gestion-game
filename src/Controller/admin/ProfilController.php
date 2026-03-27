@@ -18,10 +18,11 @@ final class ProfilController extends AbstractController
     {
         // Si l'utilisateur n'est pas connecté
         if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_home', ['login' => 1]);
         }
 
-        // // Si l'utilisateur cherche un autre id que le sien, dans la barre de recherche, pour modifier le profil par exemple
+        // Si l'utilisateur cherche un autre id que le sien, dans la barre de recherche, pour modifier le profil par exemple
         if ($this->getUser() !== $user) {
             return $this->redirectToRoute('app_home');
         }
@@ -41,7 +42,7 @@ final class ProfilController extends AbstractController
                 // Il y aura le message de succès et le message d'erreur
                 $hasErrors = false;
 
-                // On ne traite le mot de passe que si au moins un champ est rempli
+                // On ne traite pas le mot de passe si un des champs est rempli
                 if ($plainPassword || $newPassword || $confirmPassword) {
                     if (!$plainPassword || !$newPassword || !$confirmPassword) {
                         $this->addFlash('erreur', 'Veuillez remplir tous les champs nécessaires pour un changement de mot de passe.');

@@ -49,6 +49,14 @@ if (btnOpenLogin && popup && popupReg) {
     });
 }
 
+// Ouvre automatiquement le popup si `?login=1` est dans l'URL
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('login') === '1' && popup) {
+        popup.classList.remove('hidden');
+    }
+});
+
 
 // SYSTEME D'ETOILES
 document.addEventListener('DOMContentLoaded', function () {
@@ -83,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function restoreAverage(container) {
         const avg = parseFloat(container.dataset.average) || 0;
         const baseColor = container.dataset.starColor || 'text-gray-500';
-        // Les étoiles pleines sont toujours jaunes (moyenne mondiale), les vides gardent la couleur de base
+        // Les étoiles pleines sont toujours jaunes, les vides gardent la couleur de base
         updateStars(container, avg, 'text-yellow-400', baseColor);
     }
 
