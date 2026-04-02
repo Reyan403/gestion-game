@@ -2,27 +2,24 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Form\CommentModerationType;
 use App\Repository\CommentaryRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class CommentModerationController extends AbstractController
+final class CommentModerationController extends BaseController
 {
     #[Route('/comment_moderation', name: 'app_comment_moderation')]
-    public function index(CommentaryRepository $commentaryRepository, EntityManagerInterface $entityManager, Request $request): Response
+    public function index(CommentaryRepository $commentaryRepository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        // Vérifie si l'utilisateur est connecté, sinon on le redirige vers l'accueil avec le popup de login
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
-
+        if ($redirect = $this->requireLogin()) return $redirect;
+        
         // Vérifie si l'utilisateur a le droit de modérer les commentaires
         $this->denyAccessUnlessGranted(RightVoter::COMMENT_VALIDATE);
 
@@ -40,6 +37,18 @@ final class CommentModerationController extends AbstractController
                 'isArchived' => true,
             ],
             ['createdAt' => 'ASC'],
+        );
+
+        $commentaryIsValidatedPaginate = $paginator->paginate(
+            $commentaryIsValidated, 
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $commentaryIsArchivedPaginate = $paginator->paginate(
+            $commentaryIsArchived, 
+            $request->query->getInt('page', 1),
+            2
         );
 
         // LES BOUTONS
@@ -96,8 +105,8 @@ final class CommentModerationController extends AbstractController
         }
 
         return $this->render('admin/comment_moderation/index.html.twig', [
-            'commentaryIsValidated' => $commentaryIsValidated,
-            'commentaryIsArchived' => $commentaryIsArchived,
+            'commentaryIsValidated' => $commentaryIsValidatedPaginate,
+            'commentaryIsArchived' => $commentaryIsArchivedPaginate,
             'form' => $form,
         ]);
     }

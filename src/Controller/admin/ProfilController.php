@@ -2,25 +2,21 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class ProfilController extends AbstractController
+final class ProfilController extends BaseController
 {
     #[Route('/profil/{id}/edit', name: 'profil_edit', methods: ['GET', 'POST'])]
     public function edit(User $user, EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $hasher): Response
     {
-        // Si l'utilisateur n'est pas connecté
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
+        if ($redirect = $this->requireLogin()) return $redirect;
 
         // Si l'utilisateur cherche un autre id que le sien, dans la barre de recherche, pour modifier le profil par exemple
         if ($this->getUser() !== $user) {

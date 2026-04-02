@@ -2,27 +2,25 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Entity\Role;
 use App\Form\RoleType;
 use App\Repository\RoleRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 use function Symfony\Component\String\u;
 
-final class RoleManagementController extends AbstractController
+final class RoleManagementController extends BaseController
 {
     #[Route('/role_management', name: 'app_role_management')]
-    public function handleRequest(EntityManagerInterface $entityManager, Request $request, RoleRepository $roleRepository): Response
+    public function handleRequest(EntityManagerInterface $entityManager, Request $request, RoleRepository $roleRepository, PaginatorInterface $paginator): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
+        if ($redirect = $this->requireLogin()) return $redirect;
 
         if(!$this->isGranted(RightVoter::ROLE_CREATE) && !$this->isGranted(RightVoter::ROLE_EDIT) && !$this->isGranted(RightVoter::ROLE_DELETE)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires.');
@@ -30,6 +28,12 @@ final class RoleManagementController extends AbstractController
         
         // On récupère tous les rôles de la liste
         $roles = $roleRepository->findAll();
+
+        $rolesPaginate = $paginator->paginate(
+            $roles, 
+            $request->query->getInt('page', 1),
+            10
+        );
 
         // On récupère les intentions depuis l'URL (?action=new ou ?editId=5)
         $editId = $request->query->get('editId');
@@ -173,7 +177,7 @@ final class RoleManagementController extends AbstractController
             'formNew' => $formNew ? $formNew->createView() : null,
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'editId' => $editId,
-            'roles' => $roles,
+            'roles' => $rolesPaginate,
         ]);
     }
 }

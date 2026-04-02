@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block body %}
-
 	<section class="flex min-h-screen bg-[#181f2e] font-sans">
 		{{ include('composants/sidebar.html.twig') }}
 
@@ -162,6 +161,8 @@
 					</tbody>
 				</table>
 			</div>
+			
+			{{ knp_pagination_render(game, 'composants/pagination.html.twig') }}
 		</main>
 
 		{% if formNew is not null %}

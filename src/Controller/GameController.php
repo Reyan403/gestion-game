@@ -102,7 +102,7 @@ final class GameController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
 
-                if(!$this->denyAccessUnlessGranted(RightVoter::COMMENT_CREATE)) {
+                if (!$this->isGranted(RightVoter::COMMENT_CREATE)) {
                     throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires pour envoyer un commentaire');
                 }
 

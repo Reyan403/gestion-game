@@ -2,6 +2,7 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Entity\Game;
 use App\Entity\GameUpdate;
 use App\Form\GameType;
@@ -9,22 +10,19 @@ use App\Form\GameUpdateType;
 use App\Repository\GameRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class GameManagementController extends AbstractController
+final class GameManagementController extends BaseController
 {
     #[Route('/game_management', name: 'app_game_management')]
-    public function index(GameRepository $gameRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir): Response
+    public function index(GameRepository $gameRepository, EntityManagerInterface $entityManager, Request $request, #[Autowire('%image_dir%')] $imageDir, PaginatorInterface $paginator): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
-
+        if ($redirect = $this->requireLogin()) return $redirect;
+        
         if (!$this->isGranted(RightVoter::GAME_CREATE) && !$this->isGranted(RightVoter::GAME_EDIT) && !$this->isGranted(RightVoter::GAME_VALIDATE) && !$this->isGranted(RightVoter::GAME_DELETE)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires.');
         }
@@ -44,6 +42,12 @@ final class GameManagementController extends AbstractController
             ]);
         }
 
+        $gamesPaginates = $paginator->paginate(
+            $gamesDisplayed, 
+            $request->query->getInt('page', 1),
+            10
+        );
+
         // On va chercher l'id du jeu dans l'URL
         $editId = $request->query->get('editId');
         $deleteId = $request->query->get('deleteId');
@@ -60,17 +64,8 @@ final class GameManagementController extends AbstractController
 
             if ($formNew->isSubmitted()) {
                 if ($formNew->isValid()) {
-                    // On vérifie si un nouveau fichier a été envoyé via le champ 'image' du formulaire
-                    if ($image = $formNew['image']->getData()) {
-                        // On génère un nom de fichier unique (ex: 65f4a1b2c3.jpg) pour éviter les doublons sur le serveur
-                        $fileName = uniqid().'.'.$image->guessExtension();
 
-                        // On déplace physiquement le fichier du dossier temporaire vers ton dossier de destination (public/...)
-                        $image->move($imageDir, $fileName);
-
-                        // On met à jour le nom du fichier dans l'objet Game en y ajoutant le préfixe 'img/' pour la base de données
-                        $newGame->setImage('img/'.$fileName);
-                    }
+                    $this->uploadImage($newGame, $imageDir, $formNew); 
 
                     $existingGame = $gameRepository->findOneBy(['title' => $newGame->getTitle()]);
                     if ($existingGame) {
@@ -80,6 +75,7 @@ final class GameManagementController extends AbstractController
                         try {
                             $newGame->setIsValidated(false);
                             $newGame->setIsArchived(false);
+                            $newGame->setPendingChange(false);
                             $newGame->setUser($this->getUser());
                             $newGame->setDateCreated(new \DateTime('now'));
 
@@ -89,7 +85,7 @@ final class GameManagementController extends AbstractController
 
                             return $this->redirectToRoute('app_game_management');
                         } catch (\Exception $exception) {
-                            $this->addFlash('erreur', 'Une erreur est survenue. Veuillez réessayer.');
+                            $this->addFlash('erreur', 'Une erreur est survenue.' . $exception->getMessage());
                             $openNewGamePopup = true;
                         }
                     }
@@ -130,11 +126,8 @@ final class GameManagementController extends AbstractController
 
             if ($formEdit->isSubmitted()) {
                 if ($formEdit->isValid()) {
-                    if ($image = $formEdit['image']->getData()) {
-                        $fileName = uniqid().'.'.$image->guessExtension();
-                        $image->move($imageDir, $fileName);
-                        $gameUpdate->setImage('img/'.$fileName);
-                    }
+
+                    $this->uploadImage($gameUpdate, $imageDir, $formEdit); 
 
                     // Il faut que je vérifie que le titre envoyé dans le formulaire n'est pas égal à un titre déjà existant dans la table Game
                     $newTitle = $gameUpdate->getTitle();
@@ -147,6 +140,8 @@ final class GameManagementController extends AbstractController
 
                         return $this->redirectToRoute('app_game_management', ['editId' => $editId]);
                     }
+
+                    
                     try {
                         $gameUpdate->setDateUpdated(new \DateTime('now'));
                         $editGame->setPendingChange(true);
@@ -198,7 +193,7 @@ final class GameManagementController extends AbstractController
         }
 
         return $this->render('admin/game_management/index.html.twig', [
-            'game' => $gamesDisplayed,
+            'game' => $gamesPaginates,
             // Quand tu es sur la page "Ajouter", il envoie le formulaire d'ajout et null pour l'édition.
             'formNew' => $formNew ? $formNew->createView() : null,
             // Quand tu es sur la page "Modifier", il envoie le formulaire d'édition et null pour l'ajout.

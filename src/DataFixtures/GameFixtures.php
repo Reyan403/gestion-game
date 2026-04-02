@@ -27,10 +27,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'The Legend of Zelda: Breath of the Wild',
                 'description' => 'Explorez le vaste royaume d’Hyrule en résolvant des énigmes, combattant des ennemis et découvrant des secrets cachés dans ce jeu d’aventure épique.',
-                'image' => 'img/zelda.jpg',
+                'image' => 'img/zelda.webp',
                 'createdAt' => new \DateTime('2025-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
+                'pendingChange' => true,
                 'whenIsValidated' => new \DateTime('2026-03-16 16:20:00'),
                 'game' => self::ZELDA,
                 'reference_user' => UserFixtures::USER_3,
@@ -43,10 +44,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Minecraft',
                 'description' => 'Créez, explorez et survivez dans un monde ouvert composé de blocs, où l’imagination est la seule limite.',
-                'image' => 'img/minecraft.jpg',
+                'image' => 'img/minecraft.webp',
                 'createdAt' => new \DateTime('2024-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
+                'pendingChange' => false,
                 'game' => self::MINECRAFT,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
@@ -56,10 +58,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'The Witcher 3: Wild Hunt',
                 'description' => 'Incarnez Geralt de Riv, chasseur de monstres, dans un RPG riche en quêtes, choix moraux et combats intenses dans un univers médiéval fantastique.',
-                'image' => 'img/the-witcher.webp',
+                'image' => 'img/thewitcher.webp',
                 'createdAt' => new \DateTime('2023-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => true,
+                'pendingChange' => false,
                 'game' => self::THE_WITCHER,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
@@ -71,10 +74,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Fortnite',
                 'description' => 'Participez à des batailles multijoueur intenses jusqu’au dernier survivant, construisez des structures et défiez vos amis dans des combats dynamiques.',
-                'image' => 'img/fortnite.jpg',
+                'image' => 'img/fortnite.webp',
                 'createdAt' => new \DateTime('2022-01-28 16:20:00'),
-                'isValidated' => false,
+                'isValidated' => true,
                 'isArchived' => false,
+                'pendingChange' => false,
                 'game' => self::FORTNITE,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
@@ -85,10 +89,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Cyberpunk 2077',
                 'description' => 'Plongez dans Night City, une métropole futuriste, et personnalisez votre personnage pour accomplir des missions dans un monde ouvert cyberpunk.',
-                'image' => 'img/Cyberpunk2077.webp',
+                'image' => 'img/cyberpunk.webp',
                 'createdAt' => new \DateTime('2021-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
+                'pendingChange' => false,
                 'game' => self::CYBERPUNK,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
@@ -100,10 +105,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Resident Evil Village',
                 'description' => 'Plongez dans une horreur intense avec Ethan Winters qui doit survivre dans un village rempli de monstres et découvrir les secrets terrifiants de la famille Dimitrescu.',
-                'image' => 'img/resident-evil.jpg',
+                'image' => 'img/residentevil.webp',
                 'createdAt' => new \DateTime('2020-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => true,
+                'pendingChange' => false,
                 'game' => self::RESIDENT_EVIL,
                 'reference_user' => UserFixtures::USER_1,
                 'genres' => [
@@ -113,10 +119,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Grand Theft Auto V (GTA V)',
                 'description' => 'Vivez une aventure criminelle à Los Santos, avec missions scénarisées, exploration libre et une multitude d’activités dans un monde ouvert vivant.',
-                'image' => 'img/GTA.avif',
+                'image' => 'img/gta.webp',
                 'createdAt' => new \DateTime('2019-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
+                'pendingChange' => true,
                 'whenIsValidated' => new \DateTime('2026-03-17 16:20:00'),
                 'game' => self::GTA,
                 'reference_user' => UserFixtures::USER_3,
@@ -129,10 +136,11 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             [
                 'title' => 'Overwatch',
                 'description' => 'Choisissez un héros aux compétences uniques et affrontez des équipes adverses dans des matchs rapides et tactiques.',
-                'image' => 'img/overwatch.jpg',
+                'image' => 'img/overwatch.webp',
                 'createdAt' => new \DateTime('2018-01-28 16:20:00'),
                 'isValidated' => true,
                 'isArchived' => false,
+                'pendingChange' => false,
                 'whenIsValidated' => new \DateTime('2026-03-18 16:20:00'),
                 'game' => self::OVERWATCH,
                 'reference_user' => UserFixtures::USER_1,
@@ -149,6 +157,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
                 'createdAt' => new \DateTime('2017-01-28 16:20:00'),
                 'isValidated' => false,
                 'isArchived' => false,
+                'pendingChange' => false,
                 'game' => self::HOLLOW_KNIGHT,
                 'reference_user' => UserFixtures::USER_3,
                 'genres' => [
@@ -168,6 +177,7 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             $game->setDateCreated(self::data()[$i]['createdAt']);
             $game->setIsValidated(self::data()[$i]['isValidated']);
             $game->setIsArchived(self::data()[$i]['isArchived']);
+            $game->setPendingChange(self::data()[$i]['pendingChange']);
 
             $this->addReference(self::data()[$i]['game'], $game);
 

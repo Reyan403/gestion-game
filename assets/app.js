@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnArchivedGame = document.getElementById('archived-game-btn');
     const btnApprovedGame = document.getElementById('approved-game-btn');
 
-    if(btnPendingGame) {
+    if (btnPendingGame) {
         btnPendingGame.addEventListener('click', () => {
             pendingGame.classList.remove('hidden');
             archivedGame.classList.add('hidden');
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
-    if(btnArchivedGame) {
+    if (btnArchivedGame) {
         btnArchivedGame.addEventListener('click', () => {
             pendingGame.classList.add('hidden');
             archivedGame.classList.remove('hidden');
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
-    if(btnApprovedGame) {
+    if (btnApprovedGame) {
         btnApprovedGame.addEventListener('click', () => {
             approvedGame.classList.remove('hidden');
             pendingGame.classList.add('hidden');

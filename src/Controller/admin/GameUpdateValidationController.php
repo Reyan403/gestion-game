@@ -2,29 +2,33 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Form\GameUpdateValidationType;
 use App\Repository\GameUpdateRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class GameUpdateValidationController extends AbstractController
+final class GameUpdateValidationController extends BaseController
 {
     #[Route('/game_update_validation', name: 'app_game_update_validation')]
-    public function index(GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(GameUpdateRepository $gameUpdateRepository, Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
+        if ($redirect = $this->requireLogin()) return $redirect;
 
         $this->denyAccessUnlessGranted(RightVoter::GAME_VALIDATE);
         
         $pendingGameUpdate = $gameUpdateRepository->findAll();
+
+        $pendingGameUpdatePaginate = $paginator->paginate(
+            $pendingGameUpdate, 
+            $request->query->getInt('page', 1),
+            10
+        );
 
         // LES BOUTONS
 
@@ -83,7 +87,7 @@ final class GameUpdateValidationController extends AbstractController
         }
 
         return $this->render('game_update_validation/index.html.twig', [
-            'pendingGameUpdate' => $pendingGameUpdate,
+            'pendingGameUpdate' => $pendingGameUpdatePaginate,
         ]);
     }
 }

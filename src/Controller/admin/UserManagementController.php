@@ -2,31 +2,37 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Form\UserManagementType;
 use App\Repository\GameRepository;
 use App\Repository\GameUpdateRepository;
 use App\Repository\UserRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class UserManagementController extends AbstractController
+final class UserManagementController extends BaseController
 {
     #[Route('/user_management', name: 'app_user_management')]
     public function index(UserRepository $userRepository,GameRepository $gameRepository, GameUpdateRepository $gameUpdateRepository, 
-    Request $request, EntityManagerInterface $entityManager): Response
+    Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
+        if ($redirect = $this->requireLogin()) return $redirect;
+
+        if(!$this->isGranted(RightVoter::ROLE_VIEW) && !$this->isGranted(RightVoter::ROLE_ASSIGN) && !$this->isGranted(RightVoter::USER_DELETE)) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires.');
         }
 
-        $this->denyAccessUnlessGranted(RightVoter::ROLE_VIEW);
-
         $users = $userRepository->findAll();
+
+        $userPaginate = $paginator->paginate(
+            $users, 
+            $request->query->getInt('page', 1),
+            10
+        );
 
         $formEdit = null;
 
@@ -97,7 +103,7 @@ final class UserManagementController extends AbstractController
         }
 
         return $this->render('admin/user_management/index.html.twig', [
-            'users' => $users,
+            'users' => $userPaginate,
             // Quand tu es sur la page "Modifier", il envoie le formulaire d'édition et null pour l'ajout.
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'editId' => $editId,

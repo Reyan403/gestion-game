@@ -2,26 +2,24 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Form\GameValidationType;
 use App\Repository\GameRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class GameValidationController extends AbstractController
+final class GameValidationController extends BaseController
 {
     #[Route('/game_validation', name: 'app_game_validation')]
-    public function index(GameRepository $gameRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(GameRepository $gameRepository, Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
-        }
-
+        if ($redirect = $this->requireLogin()) return $redirect;
+        
         $this->denyAccessUnlessGranted(RightVoter::GAME_VALIDATE);
         
         // Afficher les jeux en attente
@@ -44,6 +42,25 @@ final class GameValidationController extends AbstractController
             [
                 'whenIsValidated' => 'DESC',
             ]);
+
+         
+        $pendingGamePaginate = $paginator->paginate(
+            $pendingGame, 
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $archivedGamePaginate = $paginator->paginate(
+            $archivedGame, 
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $approvedGamePaginate = $paginator->paginate(
+            $approvedGame, 
+            $request->query->getInt('page', 1),
+            10
+        );
 
         // BOUTONS
         $id = $request->query->get('id');
@@ -98,9 +115,9 @@ final class GameValidationController extends AbstractController
         }
 
         return $this->render('admin/game_validation/index.html.twig', [
-            'pendingGame' => $pendingGame,
-            'archivedGame' => $archivedGame,
-            'approvedGame' => $approvedGame,
+            'pendingGame' => $pendingGamePaginate,
+            'archivedGame' => $archivedGamePaginate,
+            'approvedGame' => $approvedGamePaginate,
         ]);
     }
 }

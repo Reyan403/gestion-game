@@ -2,23 +2,25 @@
 
 namespace App\Controller\admin;
 
+use App\Controller\Base\BaseController;
 use App\Form\RightTableType;
 use App\Repository\RightRepository;
 use App\Repository\RoleRepository;
+use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class RightManagementController extends AbstractController
+final class RightManagementController extends BaseController
 {
     #[Route('/right_management', name: 'app_right_management')]
     public function index(RightRepository $rightRepository, RoleRepository $roleRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->getUser()) {
-            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_home', ['login' => 1]);
+        if ($redirect = $this->requireLogin()) return $redirect;
+
+        if(!$this->isGranted(RightVoter::ROLE_CREATE) && !$this->isGranted(RightVoter::ROLE_EDIT) && !$this->isGranted(RightVoter::ROLE_DELETE) && !$this->isGranted(RightVoter::ROLE_ASSIGN)) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas les droits nécessaires.');
         }
         
         $rights = $rightRepository->findAll();
