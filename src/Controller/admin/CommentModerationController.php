@@ -8,7 +8,6 @@ use App\Repository\CommentaryRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -68,30 +67,21 @@ final class CommentModerationController extends BaseController
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
 
-                        // C'est pour faire comprendre à mon VSC que c'est un bouton
-                        // Sinon il m'indique que isClicked() est une erreur car cette méthode est spécifique que pour les boutons
-                        /** @var SubmitButton $buttonApprove */
-                        $buttonApprove = $form->get('approve');
-                        /** @var SubmitButton $buttonArchive */
-                        $buttonArchive = $form->get('archive');
-                        /** @var SubmitButton $buttonRemove */
-                        $buttonRemove = $form->get('remove');
-                        /** @var SubmitButton $buttonRestore */
-                        $buttonRestore = $form->get('restore');
+                        $clicked = $this->getClickedButton($form, ['approve', 'archive', 'restore', 'remove']);
 
-                        if ($buttonApprove->isClicked()) {
+                        if ($clicked === 'approve') {
                             $commentary->setIsValidated(true);
                             $commentary->setIsArchived(false);
                             $this->addFlash('succès', 'Le commentaire a été approuvé.');
-                        } else if ($buttonArchive->isClicked()) {
+                        } elseif ($clicked === 'archive') {
                             $commentary->setIsValidated(false);
                             $commentary->setIsArchived(true);
                             $this->addFlash('warning', 'Le commentaire a été archivé.');
-                        } else if ($buttonRestore->isClicked()) {
+                        } elseif ($clicked === 'restore') {
                             $commentary->setIsValidated(false);
                             $commentary->setIsArchived(false);
                             $this->addFlash('succès', 'Le commentaire a été restauré.');
-                        } else if ($buttonRemove->isClicked()) {
+                        } elseif ($clicked === 'remove') {
                             $entityManager->remove($commentary);
                             $this->addFlash('succès', 'Le commentaire a bien été supprimé.');
                         }

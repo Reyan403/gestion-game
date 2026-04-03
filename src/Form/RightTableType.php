@@ -14,7 +14,7 @@ class RightTableType extends AbstractType
         $builder
             ->add('rights', CollectionType::class, [
                 // Pourquoi faire deux fichiers ? Parce que le RightType est utilisé pour chaque droit et le RightTableType est utilisé pour chaque rôle
-                'entry_type' => RightFormType::class,
+                'entry_type' => RightType::class,
                 'entry_options' => ['label' => false],
                 'label' => false,
                 'allow_add' => false,

@@ -8,7 +8,6 @@ use App\Repository\GameRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -76,32 +75,23 @@ final class GameValidationController extends BaseController
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        // C'est pour faire comprendre à mon VSC que c'est un bouton
-                        // Sinon il m'indique que isClicked() est une erreur car cette méthode est spécifique que pour les boutons
-                        /** @var SubmitButton $buttonApprove */
-                        $buttonApprove = $form->get('approve');
-                        /** @var SubmitButton $buttonArchive */
-                        $buttonArchive = $form->get('archive');
-                        /** @var SubmitButton $buttonRemove */
-                        $buttonRemove = $form->get('remove');
-                        /** @var SubmitButton $buttonRestore */
-                        $buttonRestore = $form->get('restore');
+                        $clicked = $this->getClickedButton($form, ['approve', 'archive', 'restore', 'remove']);
 
-                        if ($buttonApprove->isClicked()) {
+                        if ($clicked === 'approve') {
                             $gameId->setIsValidated(true);
                             $gameId->setIsArchived(false);
                             $gameId->setIsValidatedBy($this->getUser());
                             $gameId->setWhenIsValidated(new \DateTime('now'));
                             $this->addFlash('succès', 'Le jeu a été approuvé.');
-                        } elseif ($buttonArchive->isClicked()) {
+                        } elseif ($clicked === 'archive') {
                             $gameId->setIsValidated(false);
                             $gameId->setIsArchived(true);
                             $this->addFlash('warning', 'Le jeu a été archivé.');
-                        } elseif ($buttonRestore->isClicked()) {
+                        } elseif ($clicked === 'restore') {
                             $gameId->setIsValidated(false);
                             $gameId->setIsArchived(false);
                             $this->addFlash('succès', 'Le jeu a été restauré.');
-                        } elseif ($buttonRemove->isClicked()) {
+                        } elseif ($clicked === 'remove') {
                             $entityManager->remove($gameId);
                             $this->addFlash('succès', 'Le jeu a bien été supprimé.');
                         }

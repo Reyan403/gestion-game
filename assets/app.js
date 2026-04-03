@@ -300,3 +300,51 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 });
+
+
+// ═══════════════════ FILTRES DE LA HOME ═══════════════════
+
+document.addEventListener('DOMContentLoaded', function () {
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const gameCards = document.querySelectorAll('.game-card');
+    const searchInput = document.getElementById('search-games');
+
+    if (!categoryBtns.length) return;
+
+    // Filtre par catégorie
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const selected = this.dataset.category;
+
+            // Style actif
+            categoryBtns.forEach(b => {
+                b.classList.remove('bg-[#2563EB]', 'text-white');
+                b.classList.add('bg-[#242e42]', 'text-slate-200');
+            });
+            this.classList.add('bg-[#2563EB]', 'text-white');
+            this.classList.remove('bg-[#242e42]', 'text-slate-200');
+
+            // Afficher/masquer les cartes
+            gameCards.forEach(card => {
+                const cats = card.dataset.categories || '';
+                if (selected === 'all' || cats.includes(selected)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Recherche par titre
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            gameCards.forEach(card => {
+                const title = card.dataset.title || '';
+                card.style.display = title.includes(query) ? '' : 'none';
+            });
+        });
+    }
+});
+

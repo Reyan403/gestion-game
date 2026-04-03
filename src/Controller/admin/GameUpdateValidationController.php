@@ -8,7 +8,6 @@ use App\Repository\GameUpdateRepository;
 use App\Security\RightVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -49,12 +48,9 @@ final class GameUpdateValidationController extends BaseController
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        /** @var SubmitButton $buttonApprove */
-                        $buttonApprove = $form->get('approve');
-                        /** @var SubmitButton $buttonRefuse */
-                        $buttonRefuse = $form->get('refuse');
+                        $clicked = $this->getClickedButton($form, ['approve', 'refuse']);
 
-                        if ($buttonApprove->isClicked()) {
+                        if ($clicked === 'approve') {
                             // On copie les données du GameUpdate vers le Game
                             $game->setTitle($gameUpdateId->getTitle());
                             $game->setDescription($gameUpdateId->getDescription());
@@ -72,7 +68,7 @@ final class GameUpdateValidationController extends BaseController
                             $entityManager->remove($gameUpdateId);
 
                             $this->addFlash('succès', 'La modification de ce jeu a été acceptée.');
-                        } elseif ($buttonRefuse->isClicked()) {
+                        } elseif ($clicked === 'refuse') {
                             $game->setPendingChange(false);
                             $entityManager->remove($gameUpdateId);
                             $this->addFlash('warning', 'La modification de ce jeu a été refusée.');

@@ -4,6 +4,7 @@ namespace App\Controller\Base;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 abstract class BaseController extends AbstractController  
@@ -34,5 +35,20 @@ abstract class BaseController extends AbstractController
             // On met à jour le nom du fichier dans l'objet Game en y ajoutant le préfixe 'img/' pour la base de données
             $entity->setImage('img/'.$fileName);
         }
+    }
+
+    // Retourne le nom du bouton soumis parmi la liste donnée, ou null si aucun
+    // Pourquoi array $buttons ? Car on peut avoir plusieurs boutons à vérifier 
+    protected function getClickedButton(FormInterface $form, array $buttons): ?string
+    {
+        foreach ($buttons as $name) {
+            /** @var SubmitButton $btn */
+            $btn = $form->get($name);
+            if ($btn->isClicked()) {
+                return $name;
+            }
+        }
+
+        return null;
     }
 }

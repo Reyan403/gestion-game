@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Game;
 use App\Entity\GameUpdate;
 use App\Entity\User;
@@ -21,6 +22,10 @@ class GameUpdateFixtures extends Fixture implements DependentFixtureInterface
                 'updated_at' => new \DateTime('2026-02-10 11:30:00'),
                 'reference_user' => UserFixtures::USER_3,
                 'game' => GameFixtures::ZELDA,
+                "genres" => [
+                    CategoryFixtures::HORREUR,
+                    CategoryFixtures::FPS,
+                ],
             ],
             [
                 'title' => 'Grand Theft Auto Online: Entreprises Criminelles',
@@ -29,6 +34,10 @@ class GameUpdateFixtures extends Fixture implements DependentFixtureInterface
                 'updated_at' => new \DateTime('2026-03-05 09:45:00'),
                 'reference_user' => UserFixtures::USER_3,
                 'game' => GameFixtures::GTA,
+                "genres" => [
+                    CategoryFixtures::ACTION,
+                    CategoryFixtures::FPS,
+                ],
             ],
         ];
     }
@@ -45,6 +54,12 @@ class GameUpdateFixtures extends Fixture implements DependentFixtureInterface
             $gameUpdate->setGame($this->getReference(self::data()[$i]['game'], Game::class));
             $gameUpdate->setUser($this->getReference(self::data()[$i]['reference_user'], User::class));
 
+            if(isset(self::data()[$i]['genres'])) {
+                for ($j = 0; $j < count(self::data()[$i]['genres']); ++$j) {
+                    $gameUpdate->addCategory($this->getReference(self::data()[$i]['genres'][$j], Category::class));
+                }
+            }
+
             $manager->persist($gameUpdate);
         }
 
@@ -56,6 +71,7 @@ class GameUpdateFixtures extends Fixture implements DependentFixtureInterface
         return [
             GameFixtures::class,
             UserFixtures::class,
+            CategoryFixtures::class,
         ];
     }
 }
