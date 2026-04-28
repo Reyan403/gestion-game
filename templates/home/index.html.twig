@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GameVault — Découvrez les Meilleurs Jeux
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-[#0F141E] text-white font-['Inter',sans-serif]">
+
+		<div
+			class="max-w-7xl mx-auto px-6 py-20 pb-32">
+
+			{# Header Section #}
+			<div class="text-center mb-16">
+				<h1 class="text-4xl md:text-[2.75rem] font-bold mb-4 tracking-tight text-white">
+					Découvrez les Meilleurs Jeux
+				</h1>
+				<p class="text-slate-400 text-[1.05rem] mb-10 w-full max-w-2xl mx-auto">
+					Votre destination ultime pour explorer, noter et partager vos jeux préférés
+				</p>
+
+				{# Search Bar #}
+				<div class="max-w-[42rem] mx-auto relative mb-8">
+					<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+						<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+						</svg>
+					</div>
+					<input id="search-games" type="text" placeholder="Rechercher un jeu ou une catégorie..." class="w-full bg-[#1C2436] border-none rounded-lg py-4 pl-12 pr-4 text-[0.95rem] text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm transition-all focus:bg-[#20293D]">
+				</div>
+
+				{# Categories #}
+				<div id="category-filters" class="flex flex-wrap justify-center gap-3">
+					<button class="category-btn active bg-[#2563EB] text-white text-sm font-semibold px-5 py-2 rounded-full transition-colors border-none cursor-pointer" data-category="all">
+						Tous
+					</button>
+					{% for c in category %}
+						<button class="category-btn bg-[#242e42] hover:bg-[#2C3951] text-slate-200 text-sm font-semibold px-5 py-2 rounded-full transition-colors border-none cursor-pointer" data-category="{{ c.name }}">
+							{{ c.name }}
+						</button>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+				{% for g in game %}
+					<div class="game-card bg-[#1C2436] rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-1 duration-300 flex flex-col border border-white/5" data-title="{{ g.getTitle()|lower }}" data-categories="{% for gg in g.getCategories() %}{{ gg.name }}{% if not loop.last %},{% endif %}{% endfor %}">
+						<a href="{{ path('app_game', {'id': g.id}) }}">
+							<div class="h-60 overflow-hidden relative">
+								<img src="{{ g.getImage() }}" alt="{{ g.getTitle() }}" class="w-full h-full object-cover">
+							</div>
+							<div class="p-5 flex flex-col flex-grow">
+								<h3 class="font-bold text-[1.125rem] text-white tracking-tight">{{ g.getTitle() }}</h3>
+
+								{# Ratings or empty space #}
+								{% set total_notes = 0 %}
+								{% for n in g.getNotes() %}
+									{% set total_notes = total_notes + n.getNoteGame() %}
+								{% endfor %}
+								{% set average_rating = g.getNotes()|length > 0 ? (total_notes / g.getNotes()|length)|round(1) : 0 %}
+
+								<div class="mt-1.5 flex items-center">
+									<div class="flex text-[#FACC15] items-center gap-[0.15rem]">
+										{% for i in 1..5 %}
+											<svg class="w-[1.1rem] h-[1.1rem] fill-current {{ i > average_rating|round(0, 'floor') ? 'text-slate-600' : '' }}" viewbox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+										{% endfor %}
+									</div>
+									<span class="text-slate-300 text-sm font-semibold ml-2">{{ average_rating }}</span>
+								</div>
+
+								{# Tags #}
+								<div class="flex flex-wrap gap-2 mt-4 pt-1">
+									{% for gg in g.getCategories() %}
+										<span class="bg-[#2563EB] text-white text-[0.7rem] font-bold px-3 py-1 rounded-full">
+											{{ gg.name }}
+										</span>
+									{% endfor %}
+								</div>
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

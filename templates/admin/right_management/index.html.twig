@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des droits
+{% endblock %}
+
+{% block body %}
+
+	<section class="flex min-h-screen bg-[#181f2e] font-sans">
+		{{ include('composants/sidebar.html.twig') }}
+
+		<main class="flex-1 p-8">
+			<div class="max-w-8xl mx-auto">
+				<div class="flex justify-between items-center pb-10">
+					<h1 class="text-white text-2xl font-bold">Gestion des droits</h1>
+				</div>
+
+				{{ form_start(form) }}
+				<div class="bg-[#1f2839] rounded-2xl overflow-hidden shadow-xl border border-[#2b3548]">
+					<table class="w-full text-left border-collapse">
+						<thead>
+							<tr class="border-b border-[#2b3548]">
+								<th class="px-8 py-5 text-[14px] font-bold text-gray-300">Permissions</th>
+								{% for r in role %}
+									<th class="px-6 py-5 text-center">
+										<div class="flex flex-col items-center gap-1">
+											<span class="text-[15px] font-bold text-white">{{ r.getName() }}</span>
+											<span class="text-[12px] text-gray-400 font-normal">{{ r.rights|length }}
+												droits</span>
+										</div>
+									</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[#2b3548]">
+							{% for rightForm in form.rights %}
+								<tr class="hover:bg-[#252f43] transition-colors">
+									<td class="px-8 py-5">
+										{# .vars = variables du formulaire #}
+										{# .value = valeur du formulaire #}
+										{# .getName() = nom du droit #}
+										{# Pourquoi ? Parce que le formulaire est créé avec un RightTableType qui est configuré pour avoir un champ 'rights' qui est un tableau de Right #}
+                                        <span class="text-[15px] font-semibold text-gray-100"> {{ rightForm.vars.value.getName() }}</span>
+									</td>
+
+									{% for r in role %}
+										<td
+											class="px-6 py-5 text-center align-middle">
+											{# On affiche la checkbox correspondante à ce rôle pour ce droit #}
+											{{ form_widget(rightForm.roles[r.getId()], {
+												'attr': {
+													'class': 'appearance-none w-[26px] h-[26px] rounded-lg bg-[#252f43] border-2 border-[#3b475c] checked:bg-blue-500 checked:border-blue-500 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all cursor-pointer relative checked:after:content-[""] checked:after:absolute checked:after:left-[8px] checked:after:top-[4px] checked:after:w-1.5 checked:after:h-2.5 checked:after:border-white checked:after:border-r-[2.5px] checked:after:border-b-[2.5px] checked:after:rotate-45'
+												}
+											}) }}
+										</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				{# ── Bouton de sauvegarde ── #}
+				<div class="flex justify-end mt-6">
+					<button type="submit" id="btn-save-rights" class="bg-[#3b82f6] hover:bg-blue-500 active:scale-95 transition-all text-white px-7 py-3 rounded-xl font-semibold text-[15px] flex items-center gap-2.5 shadow-lg shadow-blue-500/20">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+						</svg>
+						Enregistrer les modifications
+					</button>
+				</div>
+
+				{{ form_end(form) }}
+
+			</div>
+		</main>
+
+	</section>
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation des Jeux
+{% endblock %}
+
+{% block body %}
+	<section class="flex min-h-screen bg-[#181f2e] text-slate-200 font-sans">
+		{{ include('composants/sidebar.html.twig') }}
+
+		<main class="flex-1 p-8">
+			<div class="max-w-8xl mx-auto">
+				<h1 class="text-white text-2xl font-bold pb-6">Validation des jeux</h1>
+
+				<div class="flex flex-wrap gap-4 mb-10 mt-2">
+					<button id="pending-game-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors shadow focus:outline-none">
+						En attente ({{pendingGame|length}})
+					</button>
+					<button id="approved-game-btn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium py-2 px-6 rounded-lg transition-colors shadow focus:outline-none">
+						Récemment approuvés ({{approvedGame|length}})
+					</button>
+					<button id="archived-game-btn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium py-2 px-6 rounded-lg transition-colors shadow focus:outline-none">
+						Archivés ({{archivedGame|length}})
+					</button>
+				</div>
+
+				{# SECTION EN ATTENTE #}
+				<div id="pending-games" class="bg-slate-800/80 rounded-2xl p-6 md:p-8 shadow-xl border border-slate-700">
+					<p class="text-slate-300 mb-6 font-medium">{{pendingGame|length}}
+						jeu(x) en attente de validation</p>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+						{% for pg in pendingGame %}
+							<div class="bg-slate-700/80 rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-600/50 transition duration-300 hover:shadow-2xl hover:border-slate-500">
+								<div class="h-100 w-full bg-black relative">
+									<img src="{{ pg.getImage() }}" alt="{{ pg.Title() }}" class="w-full h-full object-cover opacity-90"/>
+								</div>
+
+								<div class="p-6 flex-1 flex flex-col">
+									<div class="flex justify-between items-start mb-4">
+										<h2 class="text-xl font-bold text-white">{{ pg.getTitle() }}</h2>
+										<div class="flex gap-2">	
+											<span class="bg-blue-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">Nouveau</span>
+											<span class="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">En attente</span>
+										</div>
+									</div>
+
+									<div class="flex flex-wrap gap-2 mb-4">
+										{% for pgc in pg.getCategories %}
+											<span class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">{{ pgc.getName() }}</span>
+										{% endfor %}
+									</div>
+
+									<p class="text-slate-300 text-sm mb-6">
+										{{ pg.getDescription() }}
+									</p>
+
+
+									<div class="text-[13px] text-slate-400 mb-4 flex items-center gap-3">
+										<div>
+											<p class="mb-0.5">Soumis par</p>
+
+											{% if pg.getUser() is not null %}
+												<p class="text-slate-200 font-medium leading-tight">
+													{{ pg.getUser().getName() }}
+												</p>
+												<p class="text-slate-500 text-xs">
+													{{ pg.getUser().getMail() }}
+												</p>
+											{% else %}
+												<p class="text-slate-200 font-medium leading-tight">
+													Inconnu
+												</p>
+											{% endif %}
+										</div>
+									</div>
+
+									<div class="text-[13px] text-slate-400 mb-6">
+										<p class="mb-0.5">Date de soumission</p>
+										<p class="text-slate-200 font-medium">{{ pg.getDateCreated()|format_datetime(locale='fr', pattern="d MMMM YYYY") }}</p>
+									</div>
+
+									<form method="POST" action="{{ path('app_game_validation', {'id': pg.id}) }}">
+										<div class="flex gap-3 mt-auto">
+											<button type="submit" name="game_validation[approve]" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+												</svg>
+												Approuver
+											</button>
+											<button type="submit" name="game_validation[archive]" class="flex-1 bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+												</svg>
+												Archiver
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+
+					{{ knp_pagination_render(pendingGame, 'composants/pagination.html.twig') }}
+
+				</div>
+
+					{# SECTION APPROUVES #}
+					<div id="approved-games" class="hidden tab-content">
+						<p class="text-slate-300 mb-6 font-medium">{{ approvedGame|length }} jeu(x) récemment approuvés</p>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+							{% for ap in approvedGame %}
+								<div class="bg-slate-700/80 rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-600/50 transition duration-300 hover:shadow-2xl hover:border-slate-500">
+									<div class="h-100 w-full bg-black relative">
+										<img src="{{ ap.getImage() }}" alt="{{ ap.getTitle() }}" class="w-full h-full object-cover"/>
+									</div>
+									<div class="p-6 flex-1 flex flex-col">
+										<div class="flex justify-between items-start mb-4">
+											<h2 class="text-xl font-bold text-white"> {{ ap.getTitle() }} </h2>
+											<div class="flex gap-2">
+												<span class="bg-green-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">Approuvé</span>
+											</div>
+										</div>
+										<div class="flex flex-wrap gap-2 mb-4">
+											{% for apc in ap.getCategories %}
+												<span class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm"> {{ apc.getName() }}  </span>
+											{% endfor %}
+										</div>
+										<p class="text-slate-300 text-sm mb-6">
+											{{ ap.getDescription() }}
+										</p>
+
+										<div class="text-[13px] text-slate-400 mb-4 flex items-center gap-3">
+											<div>
+												<p class="mb-0.5">Soumis par</p>
+		
+												{% if ap.getUser() is not null %}
+													<p class="text-slate-200 font-medium leading-tight">
+														{{ ap.getUser().getName() }}
+													</p>
+													<p class="text-slate-500 text-xs">
+														{{ ap.getUser().getMail() }}
+													</p>
+												{% else %}
+													<p class="text-slate-200 font-medium leading-tight">
+														Inconnu
+													</p>
+												{% endif %}
+											</div>
+										</div>
+
+										<div class="text-[13px] text-slate-400 mb-6 flex items-center gap-3">
+											<div>
+												<p class="mb-0.5">Approuvé par</p>
+												{% if ap.getIsValidatedBy %}
+													<p class="text-slate-200 font-medium leading-tight">
+														{{ ap.getIsValidatedBy().getName() }}
+													</p>
+													<p class="text-slate-500 text-xs">
+														Le {{ ap.getWhenIsValidated()|format_datetime(locale='fr', pattern="d MMMM YYYY") }}
+													</p>
+												{% else  %}
+													<p class="text-slate-200 font-medium leading-tight">
+														Inconnu
+													</p>
+												{% endif %}
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+
+						{{ knp_pagination_render(approvedGame, 'composants/pagination.html.twig') }}
+					</div>
+
+					{# SECTION ARCHIVEES #}
+					<div id="archived-games" class="hidden tab-content">
+						<p class="text-slate-300 mb-6 font-medium">{{archivedGame|length}}
+						jeu(x) en attente de validation</p>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+						{% for ag in archivedGame %}
+							<div class="bg-slate-700/80 rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-600/50 transition duration-300 hover:shadow-2xl hover:border-slate-500">
+								<div class="h-100 w-full bg-black relative">
+									<img src="{{ ag.getImage() }}" alt="{{ ag.Title() }}" class="w-full h-full object-cover opacity-90"/>
+								</div>
+
+								<div class="p-6 flex-1 flex flex-col">
+									<div class="flex justify-between items-start mb-4">
+										<h2 class="text-xl font-bold text-white">{{ ag.getTitle() }}</h2>
+										<div class="flex gap-2">
+											<span class="bg-slate-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">Archivé</span>
+										</div>
+									</div>
+
+									<div class="flex flex-wrap gap-2 mb-4">
+										{% for agc in ag.getCategories %}
+											<span class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">{{ agc.getName() }}</span>
+										{% endfor %}
+									</div>
+
+									<p class="text-slate-300 text-sm mb-6">
+										{{ ag.getDescription() }}
+									</p>
+
+
+									<div class="text-[13px] text-slate-400 mb-4 flex items-center gap-3">
+										<div>
+											<p class="mb-0.5">Soumis par</p>
+
+											{% if ag.getUser() is not null %}
+												<p class="text-slate-200 font-medium leading-tight">
+													{{ ag.getUser().getName() }}
+												</p>
+												<p class="text-slate-500 text-xs">
+													{{ ag.getUser().getMail() }}
+												</p>
+											{% else %}
+												<p class="text-slate-200 font-medium leading-tight">
+													Inconnu
+												</p>
+											{% endif %}
+										</div>
+									</div>
+
+									<div class="text-[13px] text-slate-400 mb-6">
+										<p class="mb-0.5">Date de soumission</p>
+										<p class="text-slate-200 font-medium">{{ ag.getDateCreated()|format_datetime(locale='fr', pattern="d MMMM YYYY") }}</p>
+									</div>
+
+									<form method="POST" action="{{ path('app_game_validation', {'id': ag.id}) }}">
+										<div class="flex gap-3 mt-auto">
+											<button type="submit" name="game_validation[restore]" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+												</svg>
+												Restaurer
+											</button>
+											<button type="submit" name="game_validation[remove]" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow" onclick="return confirm('Etes-vous sûr de vouloir supprimer ce jeu ?')">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="2">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+												</svg>
+												Supprimer
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+
+						</div>
+					</div>
+
+					{{ knp_pagination_render(archivedGame, 'composants/pagination.html.twig') }}
+
+				</div>
+			</main>
+		</section>
+	{% endblock %}

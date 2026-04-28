@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modération des Commentaires
+{% endblock %}
+
+{% block body %}
+	<div
+		class="flex min-h-screen bg-[#181f2e] font-sans">
+		{{ include('composants/sidebar.html.twig') }}
+
+		<main class="flex-1 p-8">
+			<h1 class="text-white text-2xl font-bold tracking-wide mb-8">Modération des Commentaires</h1>
+
+			{# Onglets #}
+			<div class="flex gap-4 mb-8">
+				<button id="tab-pending" class="px-6 py-2.5 bg-[#266bfd] text-white text-sm font-semibold rounded-xl shadow-md transition-colors">
+					En attente ( {{ commentaryIsValidated|length }} )
+				</button>
+
+				<button id="tab-archive" class="px-6 py-2.5 bg-[#333e54] text-slate-300 hover:text-white text-sm font-semibold rounded-xl hover:bg-[#3d4b63] transition-colors">
+					Archive ( {{ commentaryIsArchived|length }} )
+				</button>
+			</div>
+
+			{# Contenu En attente de validation #}
+			<div id="content-pending" class="bg-[#242e42] rounded-2xl p-6 shadow-xl w-full max-w-8xl">
+				<h2 class="text-slate-200 font-medium text-sm mb-6"> {{ commentaryIsValidated|length }} commentaire(s) en attente de validation</h2>
+
+				{% for cis in commentaryIsValidated %}
+					<div class="bg-[#2d3748] rounded-xl p-6 mb-4 shadow-sm border border-slate-700/50">
+						<div class="flex justify-between items-start mb-4">
+							<div class="flex gap-4 items-center">
+								<div>
+									<div class="text-white font-semibold text-sm"> {{ cis.getUser().getName() }} </div>
+									<div class="text-slate-400 text-xs"> {{ cis.getDate()|date('d/m/Y à H:i') }} </div>
+								</div>
+							</div>
+							<div class="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+								En attente
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<div class="text-slate-400 text-xs mb-1">Jeu :</div>
+							<div class="text-white font-medium text-sm leading-tight">{{ cis.getGame().getTitle() }}</div>
+						</div>
+
+						<p class="text-slate-300 text-sm mb-6 leading-relaxed">
+							{{ cis.getDescription() }}
+						</p>
+
+						{# Permet d'aller chercher l'id des commentaires validés #}
+						<form method="POST" action="{{ path('app_comment_moderation', {'id': cis.id}) }}">
+
+							<div class="flex gap-3">
+								{# BOUTON APPROUVER #}
+								<button type="submit" name="comment_moderation[approve]" class="bg-[#10b981] hover:bg-[#059669] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+									Approuver
+								</button>
+
+								{# BOUTON ARCHIVER #}
+								<button type="submit" name="comment_moderation[archive]" class="bg-[#f97316] hover:bg-[#ea580c] text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+									Archiver
+								</button>
+							</div>
+						</form>
+					</div>
+				{% endfor %}
+
+				{{ knp_pagination_render(commentaryIsValidated, 'composants/pagination.html.twig') }}
+
+			</div>
+
+			{# Contenu Archive #}
+			<div id="content-archive" class="hidden bg-[#242e42] rounded-2xl p-6 shadow-xl w-full max-w-8xl">
+				<div class="mb-6">
+					<h2 class="text-slate-200 font-medium text-sm mb-1"> {{ commentaryIsArchived|length }} commentaire(s) archivé(s)</h2>
+					<p class="text-slate-400 text-xs">Les commentaires archivés peuvent être restaurés en cas d'erreur ou supprimés définitivement.</p>
+				</div>
+
+				{% for cia in commentaryIsArchived %}
+					<!-- Comment Archive -->
+					<div class="bg-[#2d3748] rounded-xl p-6 shadow-sm border border-slate-700/50 mb-4">
+						<div class="flex justify-between items-start mb-4">
+							<div class="flex gap-4 items-center">
+								<div>
+									<div class="text-white font-semibold text-sm"> {{ cia.getUser().getName() }} </div>
+									<div class="text-slate-400 text-xs">{{ cia.getDate()|date('d/m/Y à H:i') }}</div>
+								</div>
+							</div>
+							<div class="bg-[#475569] text-white text-xs font-semibold px-3 py-1 rounded-full">
+								Archivé
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<div class="text-slate-400 text-xs mb-1">Jeu :</div>
+							<div class="text-white font-medium text-sm leading-tight">{{ cia.getGame().getTitle() }}</div>
+						</div>
+
+						<p class="text-slate-300 text-sm mb-6 leading-relaxed">
+							{{ cia.getDescription() }}
+						</p>
+
+						{# Permet d'aller chercher l'id des commentaires archivés #}
+						<form method="POST" action="{{ path('app_comment_moderation', {'id': cia.id}) }}">
+							
+							<div class="flex gap-3">
+								{# BOUTON RESTAURER #}
+								<button type="submit" name="comment_moderation[restore]" class="bg-[#266bfd] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+									Restaurer
+								</button>
+
+								{# BOUTON SUPPRIMER #}
+								{% if is_granted('Suppression d\'un commentaire') %}
+									<button type="submit" name="comment_moderation[remove]" class="bg-[#dc2626] hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+										Supprimer définitivement
+									</button>
+								{% endif %}
+							</div>
+						</form>
+					</div>
+				{% endfor %}
+			</div>
+
+			{{ knp_pagination_render(commentaryIsArchived, 'composants/pagination.html.twig') }}
+
+		</main>
+	</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil
+{% endblock %}
+
+{% block body %}
+	<div class="flex min-h-screen bg-[#0f1422] font-sans">
+		{{ include('composants/sidebar.html.twig') }}
+
+		<main class="flex-1 p-10">
+			{% include 'layout/flashes.html.twig' %}
+			<h1 class="text-[28px] font-bold text-white tracking-wide pb-8">Mon Profil</h1>
+
+			<div class="bg-[#1f2937] rounded-xl p-8 max-w-[800px] shadow-2xl border border-slate-700/50">
+				<div class="flex items-center gap-6 mb-8">
+					<div class="relative">
+						<div class="w-20 h-20 rounded-full bg-slate-500 overflow-hidden border-2 border-slate-600">
+							<img src="https://ui-avatars.com/api/?name={{ user.name|url_encode }}&background=64748b&color=fff&size=200" alt="Avatar" class="w-full h-full object-cover">
+						</div>
+						<button type="button" class="absolute bottom-0 right-0 bg-[#266bfd] p-1.5 rounded-full text-white hover:bg-blue-700 transition" aria-label="Changer l'avatar">
+							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+							</svg>
+						</button>
+					</div>
+					<div>
+						<h2 class="text-[19px] font-semibold text-white tracking-wide">{{ user.name }}</h2>
+						<p class="text-slate-400 text-[13px] mb-2">{{ user.mail }}</p>
+						<span class="inline-block bg-[#266bfd] text-white text-[11px] px-3.5 py-1 rounded-full font-medium tracking-wide shadow-sm">
+							{% if 'ROLE_ADMIN' in user.roles %}Administrateur{% elseif 'ROLE_EDITOR' in user.roles %}Rédacteur{% else %}Utilisateur
+							{% endif %}
+						</span>
+					</div>
+				</div>
+
+				<hr class="border-slate-700/80 mb-8 max-w-[700px]">
+
+				{{ form_start(form, {'attr': {'class': 'space-y-6 max-w-[700px]', 'novalidate': 'novalidate'}}) }}
+
+				<div class="space-y-2.5">
+					{{ form_label(form.name, 'Nom', {'label_attr': {'class': 'block text-[13px] font-bold text-white'}}) }}
+					{{ form_widget(form.name, {'attr': {'class': 'w-full bg-[#374151] text-slate-200 border-none rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm'}}) }}
+					{{ form_errors(form.name, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="space-y-2.5">
+					{{ form_label(form.mail, 'Email', {'label_attr': {'class': 'block text-[13px] font-bold text-white'}}) }}
+					{{ form_widget(form.mail, {'attr': {'class': 'w-full bg-[#374151] text-slate-200 border-none rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm'}}) }}
+					{{ form_errors(form.mail, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="pt-2 pb-1">
+					<h3 class="text-[15px] font-bold text-white tracking-wide">Changer le mot de passe</h3>
+				</div>
+
+				<div class="space-y-2.5">
+					{{ form_label(form.plainPassword, 'Mot de passe actuel', {'label_attr': {'class': 'block text-[13px] font-bold text-white'}}) }}
+					{{ form_widget(form.plainPassword, {'attr': {'class': 'w-full bg-[#374151] text-slate-200 border-none rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm'}}) }}
+					{{ form_errors(form.plainPassword, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="space-y-2.5">
+					{{ form_label(form.newPassword, 'Nouveau mot de passe', {'label_attr': {'class': 'block text-[13px] font-bold text-white'}}) }}
+					{{ form_widget(form.newPassword, {'attr': {'class': 'w-full bg-[#374151] text-slate-200 border-none rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm'}}) }}
+					{{ form_errors(form.newPassword, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="space-y-2.5">
+					{{ form_label(form.confirmPassword, 'Confirmer le mot de passe', {'label_attr': {'class': 'block text-[13px] font-bold text-white'}}) }}
+					{{ form_widget(form.confirmPassword, {'attr': {'class': 'w-full bg-[#374151] text-slate-200 border-none rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm'}}) }}
+					{{ form_errors(form.confirmPassword, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="pt-4">
+					{{ form_widget(form.submit, {'attr': {'class': 'cursor-pointer px-6 py-3 bg-[#266bfd] text-white text-sm font-semibold rounded-lg shadow-md hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1f2937]'}}) }}
+				</div>
+
+				{{ form_end(form) }}
+			</div>
+		</main>
+	</div>
+{% endblock %}

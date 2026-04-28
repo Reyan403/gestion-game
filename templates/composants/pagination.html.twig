@@ -1,0 +1,24 @@
+{% if pageCount > 1 %}
+	<nav class="flex items-center justify-center mt-10 mb-8 w-full" aria-label="Pagination">
+		<ul class="flex items-center gap-2">
+			
+			{# Seulement les chiffres entourés d'un carré #}
+			{% for page in pagesInRange %}
+				{% if page != current %}
+					<li>
+						<a href="{{ path(route, query|merge({(pageParameterName): page})) }}" class="flex items-center justify-center w-10 h-10 text-sm font-bold text-white bg-transparent border-2 border-white hover:bg-white hover:text-black transition-colors">
+							{{ page }}
+						</a>
+					</li>
+				{% else %}
+					<li>
+						<span class="flex items-center justify-center w-10 h-10 text-sm font-bold text-black bg-white border-2 border-white">
+							{{ page }}
+						</span>
+					</li>
+				{% endif %}
+			{% endfor %}
+
+		</ul>
+	</nav>
+{% endif %}
